@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0e27">
+    <title>Explore - GFox Git</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --primary-darker: #1e40af;
+            --primary-light: #60a5fa;
+            --accent: #06b6d4;
+            --bg-primary: #fafbfc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f3f4f6;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #94a3b8;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.03);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+            --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.15);
+            --radius-sm: 10px;
+            --radius: 14px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding-bottom: 40px;
+            letter-spacing: -0.01em;
+        }
+
+        /* Header - Premium Glassmorphism */
+        .header {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            color: white;
+            padding: 20px 24px;
+            padding-top: max(20px, env(safe-area-inset-top));
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .header-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s var(--transition-smooth);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-btn:active {
+            transform: scale(0.95);
+        }
+
+        .header-title {
+            flex: 1;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Search Bar - Premium */
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            padding: 16px 52px 16px 52px;
+            font-size: 15px;
+            color: white;
+            outline: none;
+            transition: all 0.4s var(--transition-smooth);
+            backdrop-filter: blur(10px);
+            font-weight: 500;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 8px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        .search-input:focus + .search-icon {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        .search-clear:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        .search-clear.visible {
+            display: flex;
+        }
+
+        /* Tabs - Premium Segmented Control */
+        .tabs-container {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 88px;
+            z-index: 50;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            padding: 12px 20px;
+            min-width: max-content;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s var(--transition-spring);
+            white-space: nowrap;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .tab:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-color: transparent;
+        }
+
+        .tab.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        /* Filters - Minimal Chips */
+        .filters-bar {
+            background: var(--bg-secondary);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s var(--transition-spring);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .filter-chip:hover {
+            background: white;
+            border-color: var(--primary-light);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .filter-chip.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Content */
+        .content {
+            padding: 24px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--bg-tertiary);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .repo-count {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            background: var(--bg-tertiary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            letter-spacing: -0.01em;
+        }
+
+        /* Repo Grid */
+        .repo-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        /* Repo Card - Premium Design */
+        .repo-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: all 0.4s var(--transition-smooth);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .repo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            transform: scaleX(0);
+            transition: transform 0.5s var(--transition-spring);
+            opacity: 0;
+        }
+
+        .repo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl), var(--shadow-glow);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .repo-card:hover::before {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+
+        .repo-card:active {
+            transform: translateY(-2px) scale(0.995);
+        }
+
+        .repo-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+
+        .repo-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .repo-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            letter-spacing: -0.01em;
+        }
+
+        .repo-owner {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .repo-owner svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.6;
+        }
+
+        .repo-visibility {
+            padding: 5px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            flex-shrink: 0;
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        .repo-visibility.public {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .repo-visibility.private {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .repo-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 18px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-weight: 400;
+        }
+
+        .repo-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .repo-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            transition: all 0.3s var(--transition-smooth);
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .repo-stat:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            transform: translateY(-1px);
+        }
+
+        .repo-stat svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .repo-stat strong {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .language-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--bg-tertiary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            letter-spacing: -0.01em;
+            border: 1px solid var(--border);
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        .language-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            background: white;
+        }
+
+        .language-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .repo-actions {
+            display: flex;
+            gap: 10px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 11px 16px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s var(--transition-spring);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: -0.01em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s var(--transition-smooth);
+        }
+
+        .action-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--primary-light);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .action-btn:hover::before {
+            opacity: 1;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .action-btn.primary:hover {
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .action-btn.starred {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+        }
+
+        .action-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Loading Skeleton - Premium */
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--border) 50%, var(--bg-tertiary) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: var(--radius);
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .skeleton-line {
+            height: 16px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+        }
+
+        .skeleton-line.short {
+            width: 60%;
+        }
+
+        .skeleton-line.medium {
+            width: 80%;
+        }
+
+        /* Empty State - Premium */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--border) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            box-shadow: var(--shadow-lg);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .empty-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        .empty-desc {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Pull to Refresh */
+        .pull-refresh {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .pull-refresh.show {
+            display: block;
+            animation: fadeIn 0.3s var(--transition-smooth);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Scroll to Top - Premium */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 24px;
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.4s var(--transition-spring);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+            z-index: 90;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-top:not(.visible) {
+            transform: translateY(20px);
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
+        }
+
+        .scroll-top:active {
+            transform: scale(0.95);
+        }
+
+        /* Toast - Premium */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px) scale(0.9);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 16px 28px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.4s var(--transition-spring);
+            z-index: 1000;
+            pointer-events: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            letter-spacing: -0.01em;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+
+        .toast.success { 
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+        
+        .toast.error { 
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .header {
+                padding: 16px 16px;
+                padding-top: max(16px, env(safe-area-inset-top));
+            }
+            
+            .header-title {
+                font-size: 20px;
+            }
+            
+            .search-input {
+                padding: 14px 48px 14px 48px;
+                font-size: 14px;
+            }
+            
+            .content {
+                padding: 20px 16px;
+            }
+            
+            .section-title {
+                font-size: 22px;
+            }
+            
+            .repo-card {
+                padding: 20px;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+            transition: background 0.3s var(--transition-smooth);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .repo-card {
+            animation: slideUp 0.5s var(--transition-smooth) backwards;
+        }
+
+        .repo-card:nth-child(1) { animation-delay: 0.05s; }
+        .repo-card:nth-child(2) { animation-delay: 0.1s; }
+        .repo-card:nth-child(3) { animation-delay: 0.15s; }
+        .repo-card:nth-child(4) { animation-delay: 0.2s; }
+        .repo-card:nth-child(5) { animation-delay: 0.25s; }
+        .repo-card:nth-child(6) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <button class="header-btn" onclick="window.location.href='index.html'" aria-label="Go back">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <h1 class="header-title">Explore</h1>
+            <button class="header-btn" onclick="showFilters()" aria-label="Filters">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="search-container">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search repositories..." oninput="handleSearch(this.value)">
+            <button class="search-clear" id="searchClear" onclick="clearSearch()" aria-label="Clear search">×</button>
+        </div>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('trending', this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                </svg>
+                Trending
+            </div>
+            <div class="tab" onclick="switchTab('top', this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                Top
+            </div>
+            <div class="tab" onclick="switchTab('recent', this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Recent
+            </div>
+            <div class="tab" onclick="switchTab('forked', this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="18" r="3"/>
+                    <circle cx="6" cy="6" r="3"/>
+                    <path d="M6 21V9a9 9 0 0 0 9 9"/>
+                </svg>
+                Forked
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <div class="filter-chip active" onclick="toggleFilter(this, 'language')">All</div>
+        <div class="filter-chip" onclick="toggleFilter(this, 'javascript')">JavaScript</div>
+        <div class="filter-chip" onclick="toggleFilter(this, 'python')">Python</div>
+        <div class="filter-chip" onclick="toggleFilter(this, 'typescript')">TypeScript</div>
+        <div class="filter-chip" onclick="toggleFilter(this, 'rust')">Rust</div>
+        <div class="filter-chip" onclick="toggleFilter(this, 'go')">Go</div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Discover Repositories</h2>
+                <p class="section-subtitle">Explore top projects from the community</p>
+            </div>
+            <span class="repo-count" id="repoCount">Loading...</span>
+        </div>
+
+        <div class="pull-refresh" id="pullRefresh">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:10px;animation:spin 1s linear infinite">
+                <polyline points="23 4 23 10 17 10"/>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+            </svg>
+            Pull to refresh
+        </div>
+
+        <div class="repo-grid" id="repoGrid">
+            <!-- Repos will be loaded here -->
+        </div>
+
+        <div class="empty-state" id="emptyState" style="display:none">
+            <div class="empty-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+            </div>
+            <div class="empty-title">No repositories found</div>
+            <div class="empty-desc">Try adjusting your search or filters to discover amazing projects.</div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top -->
+    <button class="scroll-top" id="scrollTop" onclick="scrollToTop()" aria-label="Scroll to top">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"/>
+        </svg>
+    </button>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        // State
+        let state = {
+            token: '',
+            currentTab: 'trending',
+            currentFilter: 'language',
+            searchQuery: '',
+            repos: [],
+            page: 1,
+            loading: false
+        };
+
+        // Language colors
+        const languageColors = {
+            JavaScript: '#f1e05a',
+            TypeScript: '#2b7489',
+            Python: '#3572A5',
+            Rust: '#dea584',
+            Go: '#00ADD8',
+            Java: '#b07219',
+            Ruby: '#701516',
+            PHP: '#4F5D95',
+            Swift: '#ffac45',
+            'C++': '#f34b7d',
+            C: '#555555',
+            HTML: '#e34c26',
+            CSS: '#563d7c',
+            Shell: '#89e051'
+        };
+
+        // Initialize
+        async function init() {
+            try {
+                const res = await fetch('/api/token', { credentials: 'include' });
+                if (res.ok) {
+                    const data = await res.json();
+                    state.token = data.token;
+                    await loadRepos();
+                } else {
+                    window.location.replace('login.html');
+                }
+            } catch (err) {
+                console.error('Init failed:', err);
+                showToast('Failed to load explore page', 'error');
+            }
+        }
+
+        // GitHub API
+        async function githubAPI(endpoint, options = {}) {
+            const url = `https://api.github.com${endpoint}`;
+            const headers = {
+                'Authorization': `token ${state.token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                ...options.headers
+            };
+            const response = await fetch(url, { ...options, headers });
+            if (!response.ok) throw new Error(`API error: ${response.status}`);
+            return response;
+        }
+
+        // Load repositories
+        async function loadRepos() {
+            if (state.loading) return;
+            state.loading = true;
+            
+            showLoading();
+            
+            try {
+                let endpoint = '/search/repositories?sort=stars&order=desc&per_page=20';
+                
+                if (state.searchQuery) {
+                    endpoint += `&q=${encodeURIComponent(state.searchQuery)}`;
+                } else {
+                    switch(state.currentTab) {
+                        case 'trending':
+                            endpoint += '&q=created:>=2024-01-01&sort=stars&order=desc';
+                            break;
+                        case 'top':
+                            endpoint += '&q=stars:>1000&sort=stars&order=desc';
+                            break;
+                        case 'recent':
+                            endpoint += '&q=created:>=2024-01-01&sort=created&order=desc';
+                            break;
+                        case 'forked':
+                            endpoint += '&q=forks:>100&sort=forks&order=desc';
+                            break;
+                    }
+                }
+
+                const response = await githubAPI(endpoint);
+                const data = await response.json();
+                state.repos = data.items || [];
+                
+                renderRepos();
+                updateRepoCount();
+                
+            } catch (err) {
+                console.error('Load failed:', err);
+                showToast('Failed to load repositories', 'error');
+            } finally {
+                state.loading = false;
+            }
+        }
+
+        // Render repositories
+        function renderRepos() {
+            const grid = document.getElementById('repoGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (state.repos.length === 0) {
+                grid.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            grid.innerHTML = state.repos.map(repo => createRepoCard(repo)).join('');
+        }
+
+        // Create repo card HTML
+        function createRepoCard(repo) {
+            const language = repo.language || 'Unknown';
+            const languageColor = languageColors[language] || '#94a3b8';
+            const isStarred = false;
+            
+            return `
+                <div class="repo-card" onclick="openRepo('${repo.full_name}')">
+                    <div class="repo-header">
+                        <div class="repo-info">
+                            <div class="repo-name">
+                                ${repo.name}
+                            </div>
+                            <div class="repo-owner">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                ${repo.owner.login}
+                            </div>
+                        </div>
+                        <span class="repo-visibility ${repo.private ? 'private' : 'public'}">${repo.private ? 'Private' : 'Public'}</span>
+                    </div>
+                    
+                    <div class="repo-description">${repo.description || 'No description available'}</div>
+                    
+                    <div class="repo-meta">
+                        <div class="language-badge">
+                            <span class="language-dot" style="background:${languageColor}"></span>
+                            ${language}
+                        </div>
+                        <div class="repo-stat">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            <strong>${repo.stargazers_count?.toLocaleString() || 0}</strong>
+                        </div>
+                        <div class="repo-stat">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="18" r="3"/>
+                                <circle cx="6" cy="6" r="3"/>
+                                <path d="M6 21V9a9 9 0 0 0 9 9"/>
+                            </svg>
+                            <strong>${repo.forks_count?.toLocaleString() || 0}</strong>
+                        </div>
+                        <div class="repo-stat">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                            </svg>
+                            <strong>${repo.open_issues_count?.toLocaleString() || 0}</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="repo-actions" onclick="event.stopPropagation()">
+                        <button class="action-btn ${isStarred ? 'starred' : ''}" onclick="toggleStar('${repo.full_name}', this)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="${isStarred ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            ${isStarred ? 'Starred' : 'Star'}
+                        </button>
+                        <button class="action-btn" onclick="forkRepo('${repo.full_name}', this)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="18" r="3"/>
+                                <circle cx="6" cy="6" r="3"/>
+                                <path d="M6 21V9a9 9 0 0 0 9 9"/>
+                            </svg>
+                            Fork
+                        </button>
+                        <button class="action-btn primary" onclick="openRepo('${repo.full_name}')">
+                            View Repo
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Show loading skeleton
+        function showLoading() {
+            const grid = document.getElementById('repoGrid');
+            grid.innerHTML = Array(4).fill(0).map((_, i) => `
+                <div class="skeleton-card" style="animation-delay: ${i * 0.1}s">
+                    <div class="skeleton-line skeleton-line medium" style="height:20px;margin-bottom:8px"></div>
+                    <div class="skeleton-line skeleton-line short" style="margin-bottom:16px"></div>
+                    <div class="skeleton-line skeleton-line" style="margin-bottom:8px"></div>
+                    <div class="skeleton-line skeleton-line" style="margin-bottom:16px"></div>
+                    <div style="display:flex;gap:10px;margin-top:16px">
+                        <div class="skeleton-line" style="flex:1;height:40px"></div>
+                        <div class="skeleton-line" style="flex:1;height:40px"></div>
+                        <div class="skeleton-line" style="flex:1;height:40px"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update repo count
+        function updateRepoCount() {
+            document.getElementById('repoCount').textContent = `${state.repos.length} repos`;
+        }
+
+        // Tab switching
+        function switchTab(tab, element) {
+            state.currentTab = tab;
+            state.page = 1;
+            
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+            
+            loadRepos();
+        }
+
+        // Filter toggling
+        function toggleFilter(element, filter) {
+            state.currentFilter = filter;
+            
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+            
+            if (filter !== 'language') {
+                state.searchQuery = `language:${filter}`;
+                document.getElementById('searchInput').value = state.searchQuery;
+            } else {
+                state.searchQuery = '';
+                document.getElementById('searchInput').value = '';
+            }
+            
+            loadRepos();
+        }
+
+        // Search handling
+        function handleSearch(value) {
+            const clearBtn = document.getElementById('searchClear');
+            clearBtn.classList.toggle('visible', value.length > 0);
+            
+            if (value.length >= 3 || value.length === 0) {
+                state.searchQuery = value;
+                debounceLoad();
+            }
+        }
+
+        // Clear search
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchClear').classList.remove('visible');
+            state.searchQuery = '';
+            loadRepos();
+        }
+
+        // Debounce for search
+        let searchTimeout;
+        function debounceLoad() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => loadRepos(), 500);
+        }
+
+        // Actions
+        async function toggleStar(repoName, btn) {
+            try {
+                const isStarred = btn.classList.contains('starred');
+                
+                if (isStarred) {
+                    await githubAPI(`/user/starred/${repoName}`, { method: 'DELETE' });
+                    btn.classList.remove('starred');
+                    btn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        Star
+                    `;
+                    showToast('Removed from starred', 'info');
+                } else {
+                    await githubAPI(`/user/starred/${repoName}`, { method: 'PUT' });
+                    btn.classList.add('starred');
+                    btn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        Starred
+                    `;
+                    showToast('Added to starred repositories', 'success');
+                }
+            } catch (err) {
+                showToast('Failed to update star', 'error');
+            }
+        }
+
+        async function forkRepo(repoName, btn) {
+            try {
+                btn.disabled = true;
+                btn.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite">
+                        <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+                    </svg>
+                    Forking...
+                `;
+                
+                await githubAPI(`/repos/${repoName}/forks`, { method: 'POST' });
+                showToast('Repository forked successfully', 'success');
+                
+                btn.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 7h-4V3a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v4H8a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h4v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h4a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1z"/>
+                    </svg>
+                    Forked
+                `;
+                btn.style.background = 'var(--success)';
+                btn.style.color = 'white';
+                btn.style.borderColor = 'var(--success)';
+                
+            } catch (err) {
+                showToast('Failed to fork repository', 'error');
+                btn.disabled = false;
+                btn.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="18" r="3"/>
+                        <circle cx="6" cy="6" r="3"/>
+                        <path d="M6 21V9a9 9 0 0 0 9 9"/>
+                    </svg>
+                    Fork
+                `;
+            }
+        }
+
+        function openRepo(repoName) {
+            window.open(`https://github.com/${repoName}`, '_blank');
+        }
+
+        function showFilters() {
+            showToast('Advanced filters coming soon', 'info');
+        }
+
+        // Scroll to top
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show/hide scroll to top button
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.getElementById('scrollTop');
+            if (window.pageYOffset > 300) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+        });
+
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = `toast ${type}`;
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Pull to refresh simulation
+        let touchStartY = 0;
+        document.addEventListener('touchstart', e => {
+            if (window.scrollY === 0) {
+                touchStartY = e.touches[0].clientY;
+            }
+        });
+
+        document.addEventListener('touchmove', e => {
+            if (window.scrollY === 0 && touchStartY) {
+                const diff = e.touches[0].clientY - touchStartY;
+                if (diff > 100) {
+                    document.getElementById('pullRefresh').classList.add('show');
+                }
+            }
+        });
+
+        document.addEventListener('touchend', () => {
+            if (document.getElementById('pullRefresh').classList.contains('show')) {
+                document.getElementById('pullRefresh').classList.remove('show');
+                loadRepos();
+                showToast('Refreshed', 'success');
+            }
+            touchStartY = 0;
+        });
+
+        // Spin animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
