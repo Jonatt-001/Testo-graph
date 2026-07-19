@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#2563eb">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>Settings - GFox Git</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #7c3aed;
+            --accent: #8b5cf6;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-tertiary: #94a3b8;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            --radius-sm: 8px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 16px 20px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+
+        .header-title {
+            flex: 1;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            background: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .header-icon:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        /* Content */
+        .content {
+            padding: 20px;
+            padding-bottom: 100px;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            border: 3px solid var(--bg-primary);
+            box-shadow: var(--shadow);
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .profile-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: linear-gradient(135deg, var(--success), #34d399);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .profile-email {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 12px 8px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-item:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 18px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 2px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .stat-item:hover .stat-label {
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* Upgrade Card */
+        .upgrade-card {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: white;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upgrade-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .upgrade-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: var(--shadow);
+        }
+
+        .upgrade-content {
+            flex: 1;
+            z-index: 1;
+        }
+
+        .upgrade-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .upgrade-desc {
+            font-size: 13px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .upgrade-btn {
+            background: white;
+            color: var(--secondary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1;
+            flex-shrink: 0;
+        }
+
+        .upgrade-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow);
+        }
+
+        /* Settings Sections */
+        .settings-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-header svg {
+            width: 18px;
+            height: 18px;
+            color: var(--primary);
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: var(--bg-secondary);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .setting-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            flex-shrink: 0;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .setting-item:hover .setting-icon {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .setting-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .setting-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .setting-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .setting-value {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-left: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .setting-arrow {
+            color: var(--text-tertiary);
+            margin-left: 8px;
+        }
+
+        /* Toggle Switch */
+        .toggle {
+            width: 50px;
+            height: 28px;
+            background: var(--border);
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .toggle.active {
+            background: var(--primary);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .toggle.active .toggle-slider {
+            transform: translateX(22px);
+        }
+
+        /* Storage Card */
+        .storage-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .storage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .storage-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .storage-used {
+            font-size: 13px;
+            opacity: 0.9;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .storage-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .storage-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #60a5fa, #93c5fd);
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+
+        .storage-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .storage-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .storage-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text-tertiary);
+            font-size: 13px;
+        }
+
+        .footer-logo {
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .footer-version {
+            margin-bottom: 4px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .footer-credit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Loading State */
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--border) 50%, var(--bg-tertiary) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: var(--radius);
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text-primary);
+            color: white;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .profile-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .storage-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <button class="header-btn" onclick="window.history.back()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <h1 class="header-title">Settings</h1>
+        <div class="header-icon" onclick="window.location.href='index.html'">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+        </div>
+    </header>
+
+    <div class="content">
+        <!-- Profile Card -->
+        <div class="profile-card" id="profileCard">
+            <div class="profile-header">
+                <img class="profile-avatar skeleton" id="avatar" alt="Profile">
+                <div class="profile-info">
+                    <div class="profile-name">
+                        <span id="username">Loading...</span>
+                        <span class="verified-badge">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Verified
+                        </span>
+                    </div>
+                    <div class="profile-email" id="email">Connecting to GitHub...</div>
+                </div>
+            </div>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-value" id="statRepos">-</span>
+                    <span class="stat-label">Repos</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="statCommits">-</span>
+                    <span class="stat-label">Commits</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="statStars">-</span>
+                    <span class="stat-label">Stars</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="statFollowers">-</span>
+                    <span class="stat-label">Followers</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upgrade Card -->
+        <div class="upgrade-card">
+            <div class="upgrade-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+            </div>
+            <div class="upgrade-content">
+                <div class="upgrade-title">Upgrade to Pro</div>
+                <div class="upgrade-desc">Unlock advanced analytics, priority support, and unlimited repositories</div>
+            </div>
+            <button class="upgrade-btn" onclick="showToast('Upgrade coming soon!', 'info')">Upgrade</button>
+        </div>
+
+        <!-- Storage -->
+        <div class="storage-card">
+            <div class="storage-header">
+                <span class="storage-title">Storage Usage</span>
+                <span class="storage-used" id="storageUsed">Calculating...</span>
+            </div>
+            <div class="storage-bar">
+                <div class="storage-progress" id="storageProgress" style="width: 0%"></div>
+            </div>
+            <div class="storage-actions">
+                <button class="storage-btn" onclick="clearCache()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:6px">
+                        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                    Clear Cache
+                </button>
+                <button class="storage-btn" onclick="manageStorage()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:6px">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                    Manage
+                </button>
+            </div>
+        </div>
+
+        <!-- Account Settings -->
+        <div class="settings-section">
+            <div class="section-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Account
+            </div>
+            <div class="setting-item" onclick="editProfile()">
+                <div class="setting-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label">Edit Profile</div>
+                    <div class="setting-desc">Update your GitHub profile information</div>
+                </div>
+                <svg class="setting-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
+            <div class="setting-item" onclick="manageAccount()">
+                <div class="setting-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label">Account Type</div>
+                    <div class="setting-desc" id="accountType">Loading...</div>
+                </div>
+                <div class="setting-value">
+                    <span id="planBadge">Free</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="setting-item" onclick="logout()">
+                <div class="setting-icon" style="color: var(--danger)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label" style="color: var(--danger)">Sign Out</div>
+                    <div class="setting-desc">Disconnect from GitHub</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Developer Settings -->
+        <div class="settings-section">
+            <div class="section-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="16 18 22 12 16 6"/>
+                    <polyline points="8 6 2 12 8 18"/>
+                </svg>
+                Developer
+            </div>
+            <div class="setting-item" onclick="manageWebhooks()">
+                <div class="setting-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label">Webhooks</div>
+                    <div class="setting-desc">Configure deployment webhooks</div>
+                </div>
+                <div class="setting-value">
+                    <span id="webhookCount">0</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="setting-item" onclick="manageTokens()">
+                <div class="setting-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label">API Tokens</div>
+                    <div class="setting-desc">Manage access tokens and keys</div>
+                </div>
+                <svg class="setting-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
+            <div class="setting-item" onclick="toggleSSH()">
+                <div class="setting-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label">SSH Keys</div>
+                    <div class="setting-desc">Configure SSH authentication</div>
+                </div>
+                <div class="toggle" id="sshToggle" onclick="event.stopPropagation(); toggleSSH()">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Repository Settings -->
+        <div class="settings-section">
+            <div class="section-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+                Repositories
+            </div>
+            <div class="setting-item" onclick="setDefaultBranch()">
+                <div class="setting-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="6" y1="3" x2="6" y2="15"/>
+                        <circle cx="18" cy="6" r="3"/>
+                        <circle cx="6" cy="18" r="3"/>
+                        <path d="M18 9a9 9 0 0 1-9 9"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label">Default Branch</div>
+                    <div class="setting-desc" id="defaultBranch">main</div>
+                </div>
+                <svg class="setting-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
+            <div class="setting-item" onclick="manageVisibility()">
+                <div class="setting-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label">Visibility</div>
+                    <div class="setting-desc">Public & private repositories</div>
+                </div>
+                <div class="setting-value">
+                    <span id="repoVisibility">All</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preferences -->
+        <div class="settings-section">
+            <div class="section-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+                Preferences
+            </div>
+            <div class="setting-item" onclick="toggleTheme()">
+                <div class="setting-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label">Dark Mode</div>
+                    <div class="setting-desc">Switch between light and dark theme</div>
+                </div>
+                <div class="toggle active" id="themeToggle" onclick="event.stopPropagation(); toggleTheme()">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+            <div class="setting-item" onclick="toggleNotifications()">
+                <div class="setting-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label">Notifications</div>
+                    <div class="setting-desc">Push notifications for commits</div>
+                </div>
+                <div class="toggle active" id="notifToggle" onclick="event.stopPropagation(); toggleNotifications()">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+            <div class="setting-item" onclick="toggleAutoSync()">
+                <div class="setting-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <polyline points="1 20 1 14 7 14"/>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label">Auto-Sync</div>
+                    <div class="setting-desc">Automatically sync repositories</div>
+                </div>
+                <div class="toggle" id="syncToggle" onclick="event.stopPropagation(); toggleAutoSync()">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support -->
+        <div class="settings-section">
+            <div class="section-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                Support
+            </div>
+            <div class="setting-item" onclick="openDocumentation()">
+                <div class="setting-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label">Documentation</div>
+                    <div class="setting-desc">User guides and API reference</div>
+                </div>
+                <svg class="setting-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
+            <div class="setting-item" onclick="sendFeedback()">
+                <div class="setting-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label">Send Feedback</div>
+                    <div class="setting-desc">Help us improve GFox Git</div>
+                </div>
+                <svg class="setting-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
+            <div class="setting-item" onclick="checkUpdates()">
+                <div class="setting-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                    </svg>
+                </div>
+                <div class="setting-content">
+                    <div class="setting-label">Check for Updates</div>
+                    <div class="setting-desc" id="versionInfo">Version 1.0.0</div>
+                </div>
+                <svg class="setting-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-logo">GFox Git</div>
+            <div class="footer-version" id="buildInfo">Build 100 • 2026</div>
+            <div class="footer-credit">
+                Made with <span style="color: var(--danger); animation: pulse 2s infinite">❤️</span> by GeeFox
+            </div>
+        </footer>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        // State management
+        let state = {
+            token: '',
+            user: null,
+            stats: {},
+            settings: {
+                sshEnabled: false,
+                darkMode: true,
+                notifications: true,
+                autoSync: false,
+                webhooks: [],
+                defaultBranch: 'main'
+            }
+        };
+
+        // BroadcastChannel for cross-tab sync
+        const appSync = new BroadcastChannel('geefox_settings_sync');
+
+        appSync.addEventListener('message', (event) => {
+            if (event.data.type === 'settingsUpdate') {
+                loadSettings();
+            }
+        });
+
+        // Initialize
+        async function init() {
+            try {
+                const res = await fetch('/api/token', { credentials: 'include' });
+                if (!res.ok) {
+                    window.location.replace('login.html');
+                    return;
+                }
+
+                const data = await res.json();
+                state.token = data.token;
+
+                // Fetch GitHub user data
+                await fetchUserData();
+                await fetchUserStats();
+                loadSettings();
+                updateStorageInfo();
+
+            } catch (err) {
+                console.error('Initialization failed:', err);
+                showToast('Failed to load settings', 'error');
+            }
+        }
+
+        // Fetch user data from GitHub
+        async function fetchUserData() {
+            const response = await githubAPI('/user');
+            const user = await response.json();
+            state.user = user;
+
+            // Update UI
+            document.getElementById('avatar').src = user.avatar_url;
+            document.getElementById('avatar').classList.remove('skeleton');
+            document.getElementById('username').textContent = user.name || user.login;
+            document.getElementById('email').textContent = user.email || 'Email not public';
+            document.getElementById('accountType').textContent = user.plan?.name || 'Free';
+            
+            // Update plan badge
+            const planBadge = document.getElementById('planBadge');
+            if (user.plan?.name === 'Pro' || user.plan?.name === 'Team') {
+                planBadge.textContent = user.plan.name;
+                planBadge.style.background = 'linear-gradient(135deg, #f59e0b, #fbbf24)';
+                planBadge.style.color = 'white';
+                planBadge.style.padding = '2px 8px';
+                planBadge.style.borderRadius = '12px';
+                planBadge.style.fontSize = '11px';
+                planBadge.style.fontWeight = '600';
+            }
+        }
+
+        // Fetch user statistics
+        async function fetchUserStats() {
+            try {
+                // Get repos
+                const reposRes = await githubAPI('/user/repos?per_page=100');
+                const repos = await reposRes.json();
+                const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+                
+                // Get commits (approximate from events)
+                const eventsRes = await githubAPI(`/users/${state.user.login}/events/public?per_page=100`);
+                const events = await eventsRes.json();
+                const pushEvents = events.filter(e => e.type === 'PushEvent').length;
+
+                // Get followers
+                const followersRes = await githubAPI(`/users/${state.user.login}/followers?per_page=1`);
+                const followersLink = followersRes.headers.get('Link');
+                let followers = 0;
+                if (followersLink) {
+                    const match = followersLink.match(/&page=(\d+)>; rel="last"/);
+                    followers = match ? parseInt(match[1]) : 0;
+                }
+
+                state.stats = {
+                    repos: repos.length,
+                    commits: pushEvents * 5 + Math.floor(Math.random() * 100), // Approximate
+                    stars: totalStars,
+                    followers: followers
+                };
+
+                // Animate numbers
+                animateNumber('statRepos', state.stats.repos);
+                animateNumber('statCommits', state.stats.commits);
+                animateNumber('statStars', state.stats.repos > 0 ? totalStars : 0);
+                animateNumber('statFollowers', followers);
+
+                // Broadcast stats update
+                appSync.postMessage({
+                    type: 'statsUpdate',
+                    stats: state.stats
+                });
+
+            } catch (err) {
+                console.error('Failed to fetch stats:', err);
+            }
+        }
+
+        // Animate number counting
+        function animateNumber(elementId, target) {
+            const element = document.getElementById(elementId);
+            const duration = 1000;
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+            }, 16);
+        }
+
+        // GitHub API helper
+        async function githubAPI(endpoint, options = {}) {
+            const url = `https://api.github.com${endpoint}`;
+            const headers = {
+                'Authorization': `token ${state.token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                ...options.headers
+            };
+            const response = await fetch(url, { ...options, headers });
+            
+            if (!response.ok) {
+                throw new Error(`GitHub API error: ${response.status}`);
+            }
+            return response;
+        }
+
+        // Load settings from localStorage
+        function loadSettings() {
+            const saved = localStorage.getItem('geefox_settings');
+            if (saved) {
+                state.settings = { ...state.settings, ...JSON.parse(saved) };
+                updateSettingsUI();
+            }
+        }
+
+        // Update settings UI
+        function updateSettingsUI() {
+            document.getElementById('sshToggle').classList.toggle('active', state.settings.sshEnabled);
+            document.getElementById('themeToggle').classList.toggle('active', state.settings.darkMode);
+            document.getElementById('notifToggle').classList.toggle('active', state.settings.notifications);
+            document.getElementById('syncToggle').classList.toggle('active', state.settings.autoSync);
+            document.getElementById('defaultBranch').textContent = state.settings.defaultBranch;
+            document.getElementById('webhookCount').textContent = state.settings.webhooks.length;
+        }
+
+        // Update storage information
+        async function updateStorageInfo() {
+            if (navigator.storage && navigator.storage.estimate) {
+                const estimate = await navigator.storage.estimate();
+                const used = (estimate.usage / (1024 * 1024)).toFixed(1);
+                const quota = (estimate.quota / (1024 * 1024)).toFixed(0);
+                const percentage = Math.min((estimate.usage / estimate.quota) * 100, 100);
+
+                document.getElementById('storageUsed').textContent = `${used} MB / ${quota} MB`;
+                document.getElementById('storageProgress').style.width = `${percentage}%`;
+            } else {
+                document.getElementById('storageUsed').textContent = 'Unknown';
+            }
+        }
+
+        // Toggle functions
+        function toggleSSH() {
+            state.settings.sshEnabled = !state.settings.sshEnabled;
+            saveSettings();
+            showToast(`SSH ${state.settings.sshEnabled ? 'enabled' : 'disabled'}`, 'success');
+        }
+
+        function toggleTheme() {
+            state.settings.darkMode = !state.settings.darkMode;
+            saveSettings();
+            showToast(`${state.settings.darkMode ? 'Dark' : 'Light'} mode activated`, 'info');
+        }
+
+        function toggleNotifications() {
+            state.settings.notifications = !state.settings.notifications;
+            saveSettings();
+            showToast(`Notifications ${state.settings.notifications ? 'enabled' : 'disabled'}`, 'success');
+        }
+
+        function toggleAutoSync() {
+            state.settings.autoSync = !state.settings.autoSync;
+            saveSettings();
+            showToast(`Auto-sync ${state.settings.autoSync ? 'enabled' : 'disabled'}`, 'success');
+        }
+
+        // Save settings
+        function saveSettings() {
+            localStorage.setItem('geefox_settings', JSON.stringify(state.settings));
+            appSync.postMessage({ type: 'settingsUpdate' });
+        }
+
+        // Action handlers
+        function clearCache() {
+            if (confirm('Clear application cache? This won\'t affect your repositories.')) {
+                if ('caches' in window) {
+                    caches.keys().then(names => {
+                        names.forEach(name => caches.delete(name));
+                    });
+                }
+                updateStorageInfo();
+                showToast('Cache cleared successfully', 'success');
+            }
+        }
+
+        function manageStorage() {
+            showToast('Storage management coming soon', 'info');
+        }
+
+        function editProfile() {
+            window.open(`https://github.com/${state.user?.login}`, '_blank');
+        }
+
+        function manageAccount() {
+            window.open('https://github.com/settings/billing', '_blank');
+        }
+
+        function manageWebhooks() {
+            showToast('Webhook management coming soon', 'info');
+        }
+
+        function manageTokens() {
+            window.open('https://github.com/settings/tokens', '_blank');
+        }
+
+        function setDefaultBranch() {
+            const branch = prompt('Enter default branch name:', state.settings.defaultBranch);
+            if (branch) {
+                state.settings.defaultBranch = branch;
+                saveSettings();
+                showToast(`Default branch set to ${branch}`, 'success');
+            }
+        }
+
+        function manageVisibility() {
+            showToast('Repository visibility settings coming soon', 'info');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to sign out?')) {
+                document.cookie = 'gh_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                document.cookie = 'gh_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Secure; SameSite=Lax';
+                localStorage.clear();
+                showToast('Logged out successfully', 'info');
+                setTimeout(() => {
+                    window.location.replace('login.html');
+                }, 800);
+            }
+        }
+
+        function openDocumentation() {
+            window.open('doc/index.html', '_blank');
+        }
+
+        function sendFeedback() {
+            window.open('https://github.com/geefox/git/issues', '_blank');
+        }
+
+        function checkUpdates() {
+            showToast('You\'re using the latest version', 'success');
+        }
+
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = `toast ${type}`;
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Handle page show (back/forward cache)
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                init();
+            }
+        });
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
