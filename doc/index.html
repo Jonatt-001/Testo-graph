@@ -1,0 +1,741 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width">
+<meta name="description" content="GFox Git Documentation - Complete guide to using the ultimate mobile-first Git client.">
+<meta name="keywords" content="GFox Git, GitHub mobile client, Git documentation, repository management">
+<!--[if !mso]><!-- -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!--<![endif]-->
+<!--[if gte mso 9]><xml>
+<o:OfficeDocumentSettings>
+<o:AllowPNG/>
+<o:PixelsPerInch>96</o:PixelsPerInch>
+</o:OfficeDocumentSettings>
+</xml><![endif]-->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  
+  body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+  table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+  img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+  
+  .premium-font { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  
+  .heading-1 { font-size: 48px !important; line-height: 1.1 !important; font-weight: 700 !important; letter-spacing: -0.03em !important; color: #ffffff !important; }
+  .heading-2 { font-size: 32px !important; line-height: 1.2 !important; font-weight: 600 !important; letter-spacing: -0.02em !important; color: #0f172a !important; }
+  .heading-3 { font-size: 20px !important; line-height: 1.3 !important; font-weight: 600 !important; letter-spacing: -0.01em !important; color: #0f172a !important; }
+  .heading-3-light { font-size: 20px !important; line-height: 1.3 !important; font-weight: 600 !important; letter-spacing: -0.01em !important; color: #ffffff !important; }
+  
+  .body-text { font-size: 16px !important; line-height: 1.7 !important; font-weight: 400 !important; color: #475569 !important; }
+  .body-text-light { font-size: 16px !important; line-height: 1.7 !important; font-weight: 400 !important; color: #cbd5e1 !important; }
+  .caption { font-size: 14px !important; line-height: 1.5 !important; font-weight: 500 !important; color: #64748b !important; letter-spacing: 0.02em !important; text-transform: uppercase !important; }
+  
+  .card { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; }
+  .card-dark { background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; }
+  
+  .btn-primary { background-color: #2563eb; color: #ffffff !important; font-weight: 600 !important; text-decoration: none; padding: 14px 28px; border-radius: 10px; display: inline-block; font-size: 15px !important; letter-spacing: -0.01em; transition: all 0.2s ease; }
+  .btn-primary:hover { background-color: #1d4ed8 !important; }
+  
+  .link-text { color: #2563eb !important; text-decoration: none !important; font-weight: 600 !important; font-size: 15px !important; }
+  .link-text:hover { color: #1d4ed8 !important; text-decoration: underline !important; }
+
+  /* FAQ Accordion Styles */
+  .faq-item {
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+  }
+  .faq-item:last-child {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  details.faq-details {
+    width: 100%;
+  }
+  summary.faq-summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  summary.faq-summary::-webkit-details-marker {
+    display: none;
+  }
+  summary.faq-summary .faq-icon {
+    color: #2563eb;
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  details.faq-details[open] summary.faq-summary .faq-icon {
+    transform: rotate(45deg);
+  }
+  .faq-answer {
+    margin-top: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .heading-1 { font-size: 36px !important; }
+    .heading-2 { font-size: 26px !important; }
+    .mobile-stack { display: block !important; width: 100% !important; }
+    .mobile-padding { padding-left: 24px !important; padding-right: 24px !important; }
+    .mobile-hide { display: none !important; }
+  }
+
+/* FAQ Section Styles */
+.faq-section {
+  padding: 80px 40px;
+  background-color: #ffffff;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.faq-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.faq-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 48px;
+  line-height: 1.2;
+}
+
+/* FAQ Accordion Item */
+.faq-item {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 24px 0;
+  transition: all 0.3s ease;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.faq-item:hover {
+  padding-left: 8px;
+  transition: all 0.3s ease;
+}
+
+/* FAQ Question (Summary) */
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  list-style: none;
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+}
+
+.faq-question::-webkit-details-marker {
+  display: none;
+}
+
+.faq-question:hover {
+  color: #2563eb;
+}
+
+/* Plus Icon */
+.faq-icon {
+  font-size: 24px;
+  font-weight: 300;
+  color: #2563eb;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 16px;
+  line-height: 1;
+}
+
+details[open] .faq-icon {
+  transform: rotate(45deg);
+}
+
+/* FAQ Answer */
+.faq-answer {
+  padding-top: 16px;
+  padding-right: 24px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #475569;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .faq-section {
+    padding: 60px 24px;
+  }
+  
+  .faq-title {
+    font-size: 26px;
+    margin-bottom: 36px;
+  }
+  
+  .faq-question {
+    font-size: 16px;
+    padding-right: 8px;
+  }
+  
+  .faq-answer {
+    font-size: 15px;
+    padding-right: 0;
+  }
+}
+
+/* Optional: Add a subtle background to active item */
+details[open] .faq-item {
+  background-color: #f8fafc;
+  margin: 0 -24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  border-radius: 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+
+
+</style>
+</head>
+
+<body dir="ltr" style="background-color: #f8fafc; margin: 0; padding: 0; width: 100%;">
+
+<!-- Main Wrapper -->
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #f8fafc;">
+<tr>
+<td align="center" style="padding: 0;">
+
+<!--[if (gte mso 9)|(IE)]>
+<table width="680" align="center" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td>
+<![endif]-->
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width: 680px; background-color: #ffffff; border-radius: 0 0 24px 24px; overflow: hidden;">
+  
+  <!-- Header / Logo -->
+  <tr>
+    <td align="center" style="background-color: #0f172a; padding: 32px 40px;">
+      <img src="https://www.geefox.xyz/logo.png" width="48" height="48" alt="GFox Git" style="display: block; max-width: 48px; height: auto;">
+    </td>
+  </tr>
+
+  <!-- Hero Section -->
+  <tr>
+    <td align="center" style="background-color: #0f172a; padding: 60px 40px 80px 40px;" class="mobile-padding">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="center" class="premium-font heading-1" style="padding-bottom: 24px; color: #ffffff;">
+            GFox Git Documentation
+          </td>
+        </tr>
+        <tr>
+          <td align="center" class="premium-font body-text-light" style="max-width: 480px; padding-bottom: 40px; color: #94a3b8;">
+            A comprehensive guide to mastering repository management, seamless GitHub integration, and automated deployments from your mobile device.
+          </td>
+        </tr>
+        <tr>
+          <td align="center">
+            <a href="https://www.geefox.xyz/login.html" class="premium-font btn-primary">Get Started</a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+
+<!-- Illustration Section 1: Onboarding/Getting Started -->
+<tr>
+  <td align="center" style="background-color: #f8fafc; padding: 60px 40px;">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width: 600px;">
+      <tr>
+        <td align="center">
+          <!-- Option 1: Developer illustration -->
+          <img src="../assets/real.jpg" 
+               alt="Developer Onboarding" 
+               style="max-width: 100%; height: auto; display: block; border-radius: 16px;"
+               width="600">
+          
+
+        </td>
+      </tr>
+      <tr>
+        <td align="center" style="padding-top: 32px;">
+          <div class="premium-font body-text" style="color: #64748b; font-size: 16px; max-width: 480px;">
+            Start your journey with GFox Git and manage your repositories from anywhere
+          </div>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+
+  <!-- Section 1: Getting Started -->
+  <tr>
+    <td align="center" style="background-color: #ffffff; padding: 80px 40px 40px 40px;" class="mobile-padding">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="left" class="premium-font caption" style="padding-bottom: 12px; color: #2563eb;">01 / Onboarding</td>
+        </tr>
+        <tr>
+          <td align="left" class="premium-font heading-2" style="padding-bottom: 48px;">Getting Started</td>
+        </tr>
+        
+        <!-- Card 1 -->
+        <tr>
+          <td style="padding-bottom: 24px;">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="card">
+              <tr>
+                <td style="padding: 32px;">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="48" valign="top" style="padding-right: 20px;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                      </td>
+                      <td valign="top">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td class="premium-font heading-3" style="padding-bottom: 12px;">Authentication & Security</td>
+                          </tr>
+                          <tr>
+                            <td class="premium-font body-text" style="padding-bottom: 16px;">
+                              GFox utilizes industry-standard OAuth 2.0 authentication. Your credentials are never stored locally. Access tokens are secured in HttpOnly, Secure cookies with SameSite=Lax protection and automatically rotate every 7 days.
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <a href="https://www.geefox.xyz/login.html" class="premium-font link-text">Authenticate with GitHub &rarr;</a>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Card 2 -->
+        <tr>
+          <td>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="card">
+              <tr>
+                <td style="padding: 32px;">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="48" valign="top" style="padding-right: 20px;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      </td>
+                      <td valign="top">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td class="premium-font heading-3" style="padding-bottom: 12px;">First-Time Setup</td>
+                          </tr>
+                          <tr>
+                            <td class="premium-font body-text">
+                              <strong style="color: #0f172a;">1.</strong> Authorize GFox to access your repositories.<br>
+                              <strong style="color: #0f172a;">2.</strong> Land on your personalized dashboard.<br>
+                              <strong style="color: #0f172a;">3.</strong> Configure optional integrations in Settings.
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+
+  <!-- Section 2: Core Features -->
+  <tr>
+    <td align="center" style="background-color: #f8fafc; padding: 80px 40px;" class="mobile-padding">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="left" class="premium-font caption" style="padding-bottom: 12px; color: #2563eb;">02 / Capabilities</td>
+        </tr>
+        <tr>
+          <td align="left" class="premium-font heading-2" style="padding-bottom: 48px;">Repository Management</td>
+        </tr>
+        
+        <tr>
+          <td>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <!-- Feature 1 -->
+                <td width="48%" valign="top" class="mobile-stack" style="padding-right: 24px; padding-bottom: 24px;">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="card" style="height: 100%;">
+                    <tr>
+                      <td style="padding: 32px;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 20px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                        <div class="premium-font heading-3" style="padding-bottom: 12px; font-size: 18px !important;">Browse & Search</div>
+                        <div class="premium-font body-text" style="font-size: 15px !important;">View all repositories with powerful search and filter options. Sort by name, last updated, or stars.</div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <!-- Feature 2 -->
+                <td width="48%" valign="top" class="mobile-stack" style="padding-bottom: 24px;">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="card" style="height: 100%;">
+                    <tr>
+                      <td style="padding: 32px;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 20px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        <div class="premium-font heading-3" style="padding-bottom: 12px; font-size: 18px !important;">Direct Uploads</div>
+                        <div class="premium-font body-text" style="font-size: 15px !important;">Upload files directly to your repositories. Full support for all file types with automated commit messages.</div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" align="center" style="padding-top: 16px;">
+                  <a href="https://www.geefox.xyz/explorer.html" class="premium-font link-text">Explore all features &rarr;</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+<!-- Illustration Section 2: API Integration/Advanced Features -->
+<tr>
+  <td align="center" style="background-color: #ffffff; padding: 80px 40px;">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width: 600px;">
+      <tr>
+        <td align="center" style="padding-bottom: 24px;">
+          <div class="premium-font caption" style="color: #2563eb;">Powerful Integrations</div>
+        </td>
+      </tr>
+      <tr>
+        <td align="center">
+          <!-- API Integration illustration -->
+          <img src="../assets/workflow.jpg" 
+               alt="API Integration" 
+               style="max-width: 100%; height: auto; display: block; border-radius: 16px;"
+               width="600">
+        </td>
+      </tr>
+      <tr>
+        <td align="center" style="padding-top: 32px;">
+          <div class="premium-font body-text" style="color: #475569; font-size: 16px; max-width: 480px;">
+            Seamlessly connect with GitHub Actions, Netlify, and your favorite CI/CD tools
+          </div>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+
+
+  <!-- Section 3: Advanced Features -->
+  <tr>
+    <td align="center" style="background-color: #0f172a; padding: 80px 40px;" class="mobile-padding">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="left" class="premium-font caption" style="padding-bottom: 12px; color: #60a5fa;">03 / Power User</td>
+        </tr>
+        <tr>
+          <td align="left" class="premium-font heading-3-light" style="padding-bottom: 48px;">Advanced Integrations</td>
+        </tr>
+        
+        <!-- Advanced Card 1 -->
+        <tr>
+          <td style="padding-bottom: 24px;">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="card-dark">
+              <tr>
+                <td style="padding: 32px;">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="48" valign="top" style="padding-right: 20px;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                      </td>
+                      <td valign="top">
+                        <div class="premium-font heading-3-light" style="padding-bottom: 12px; font-size: 18px !important;">GitHub Actions Monitoring</div>
+                        <div class="premium-font body-text-light" style="font-size: 15px !important;">Monitor and track your GitHub Actions workflows directly from GFox. View build status, logs, and deployment progress in real-time without leaving the app.</div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Advanced Card 2 -->
+        <tr>
+          <td>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="card-dark">
+              <tr>
+                <td style="padding: 32px;">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="48" valign="top" style="padding-right: 20px;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                      </td>
+                      <td valign="top">
+                        <div class="premium-font heading-3-light" style="padding-bottom: 12px; font-size: 18px !important;">Netlify CI/CD Deployment</div>
+                        <div class="premium-font body-text-light" style="font-size: 15px !important; padding-bottom: 16px;">Connect your Netlify build hooks to automatically trigger deployments after pushing files. Configure webhook URLs in Settings for a seamless, zero-config CI/CD pipeline.</div>
+                        <a href="https://www.geefox.xyz/settings.html" class="premium-font link-text" style="color: #60a5fa !important;">Configure Webhooks &rarr;</a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+
+  <!-- Section 4: FAQ (Accordion) -->
+  <tr>
+    <td align="center" style="background-color: #ffffff; padding: 80px 40px;" class="mobile-padding">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="left" class="premium-font caption" style="padding-bottom: 12px; color: #2563eb;">04 / Support</td>
+        </tr>
+        <tr>
+          <td align="left" class="premium-font heading-2" style="padding-bottom: 48px;">Frequently Asked Questions</td>
+        </tr>
+        
+        <!-- FAQ 1 -->
+        <tr>
+          <td class="faq-item">
+            <details class="faq-details">
+              <summary class="premium-font heading-3 faq-summary" style="font-size: 18px !important;">
+                <span>Is my GitHub token secure?</span>
+                <span class="faq-icon">+</span>
+              </summary>
+              <div class="premium-font body-text faq-answer" style="font-size: 15px !important;">
+                Absolutely. We use OAuth 2.0 with HttpOnly, Secure cookies. Your token is never exposed to client-side JavaScript and is automatically rotated every 7 days for maximum security.
+              </div>
+            </details>
+          </td>
+        </tr>
+
+        <!-- FAQ 2 -->
+        <tr>
+          <td class="faq-item">
+            <details class="faq-details">
+              <summary class="premium-font heading-3 faq-summary" style="font-size: 18px !important;">
+                <span>Can I use GFox with private repositories?</span>
+                <span class="faq-icon">+</span>
+              </summary>
+              <div class="premium-font body-text faq-answer" style="font-size: 15px !important;">
+                Yes. GFox supports both public and private repositories. You have full, secure access to all repositories your GitHub account has permission to view.
+              </div>
+            </details>
+          </td>
+        </tr>
+
+        <!-- FAQ 3 -->
+        <tr>
+          <td class="faq-item">
+            <details class="faq-details">
+              <summary class="premium-font heading-3 faq-summary" style="font-size: 18px !important;">
+                <span>How do I properly sign out?</span>
+                <span class="faq-icon">+</span>
+              </summary>
+              <div class="premium-font body-text faq-answer" style="font-size: 15px !important;">
+                Navigate to Settings and select "Sign Out". This securely clears your authentication token and redirects you to the login page. For added security, tokens expire automatically after 7 days of inactivity.
+              </div>
+            </details>
+          </td>
+        </tr>
+
+        <!-- FAQ 4 -->
+        <tr>
+          <td class="faq-item">
+            <details class="faq-details">
+              <summary class="premium-font heading-3 faq-summary" style="font-size: 18px !important;">
+                <span>Can I install GFox on my home screen?</span>
+                <span class="faq-icon">+</span>
+              </summary>
+              <div class="premium-font body-text faq-answer" style="font-size: 15px !important;">
+                Yes. GFox is a fully functional Progressive Web App (PWA). On iOS, tap the Share button and select "Add to Home Screen". On Android, open the browser menu and select "Install app".
+              </div>
+            </details>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+
+
+<!-- Illustration Section 3: Deployment/Mobile Development -->
+<tr>
+  <td align="center" style="background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%); padding: 80px 40px;">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width: 600px;">
+      <tr>
+        <td align="center" style="padding-bottom: 24px;">
+          <div class="premium-font heading-2" style="color: #0f172a; font-size: 28px;">
+            Deploy Anywhere, Anytime
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td align="center">
+          <!-- Deployment/Mobile illustration -->
+          <img src="../assets/prod.jpg" 
+               alt="Mobile Deployment" 
+               style="max-width: 100%; height: auto; display: block; border-radius: 16px;"
+               width="600">
+        </td>
+      </tr>
+      <tr>
+        <td align="center" style="padding-top: 32px; padding-bottom: 24px;">
+          <div class="premium-font body-text" style="color: #64748b; font-size: 16px; max-width: 480px;">
+            From your mobile device to production — deploy with confidence using GFox Git
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td align="center">
+          <a href="https://www.geefox.xyz/login.html" class="premium-font btn-primary">Start Deploying Now</a>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+
+
+  <!-- Premium Footer -->
+  <tr>
+    <td align="center" style="background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #2563eb 100%); padding: 80px 40px 40px;" class="mobile-padding">
+      <table width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width: 600px;">
+        
+        <!-- Logo -->
+        <tr>
+          <td align="center" style="padding-bottom: 24px;">
+            <img src="https://www.geefox.xyz/logo.png" width="64" height="64" alt="GFox Git" style="display: block; max-width: 64px; height: auto;">
+          </td>
+        </tr>
+
+        <!-- Tagline -->
+        <tr>
+          <td align="center" style="padding-bottom: 48px;">
+            <div class="premium-font" style="color: #94a3b8; font-size: 18px; font-weight: 400; line-height: 1.6;">
+              Production-ready Git client for mobile developers.<br>Manage repos, push code & deploy seamlessly.
+            </div>
+          </td>
+        </tr>
+
+        <!-- Navigation -->
+        <tr>
+          <td align="center" style="padding-bottom: 40px;">
+            <table border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding: 0 16px;"><a href="https://www.geefox.xyz/" class="premium-font" style="color: #60a5fa; text-decoration: none; font-size: 16px; font-weight: 600;">Home</a></td>
+                <td style="padding: 0 16px;"><a href="https://www.geefox.xyz/explorer.html" class="premium-font" style="color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 500;">Repositories</a></td>
+                <td style="padding: 0 16px;"><a href="https://www.geefox.xyz/settings.html" class="premium-font" style="color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 500;">Settings</a></td>
+                <td style="padding: 0 16px;"><a href="https://www.geefox.xyz/doc/index.html" class="premium-font" style="color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 500;">Documentation</a></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Social Icons -->
+        <tr>
+          <td align="center" style="padding-bottom: 60px;">
+            <table border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding: 0 12px;">
+                  <a href="https://github.com" target="_blank" rel="noopener" style="display: block; width: 48px; height: 48px; border: 2px solid #60a5fa; border-radius: 50%; text-decoration: none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: block; margin: 10px auto; color: #60a5fa;">
+                      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
+                </td>
+                <td style="padding: 0 12px;">
+                  <a href="https://twitter.com" target="_blank" rel="noopener" style="display: block; width: 48px; height: 48px; border: 2px solid #60a5fa; border-radius: 50%; text-decoration: none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: block; margin: 10px auto; color: #60a5fa;">
+                      <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Copyright -->
+        <tr>
+          <td align="center" style="padding-bottom: 20px;">
+            <div class="premium-font" style="color: #64748b; font-size: 14px; line-height: 1.6;">
+              &copy; 2026 GeeFox Git. All rights reserved.
+            </div>
+          </td>
+        </tr>
+
+        <!-- Large Brand Text -->
+        <tr>
+          <td align="center">
+            <div class="premium-font" style="color: rgba(255, 255, 255, 0.15); font-size: 72px; font-weight: 800; letter-spacing: -4px; line-height: 1; user-select: none;">
+              geefox
+            </div>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+
+</table>
+<!--[if (gte mso 9)|(IE)]>
+</td>
+</tr>
+</table>
+<![endif]-->
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>
