@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="GFox Git">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="GFox Git">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <title>GFox Git ~ File Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <link rel="stylesheet" href="geefox.css">
+
+    <style>
+        :root {
+            --safe-area-top: env(safe-area-inset-top);
+            --safe-area-bottom: env(safe-area-inset-bottom);
+            --safe-area-left: env(safe-area-inset-left);
+            --safe-area-right: env(safe-area-inset-right);
+        }
+
+        body {
+            overscroll-behavior-y: contain;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .header {
+            padding-top: max(16px, var(--safe-area-top));
+        }
+
+        .bottom-nav {
+            padding-bottom: max(16px, var(--safe-area-bottom));
+        }
+
+        /* Make modals scrollable on mobile */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            width: 100%;
+            max-width: 500px;
+            max-height: calc(100vh - 150px); /* Account for bottom nav and padding */
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease;
+        }
+
+        /* Ensure modal content is scrollable */
+        .modal h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            position: sticky;
+            bottom: 0;
+            background: var(--surface);
+        }
+
+        /* Mobile-specific adjustments */
+        @media (max-width: 600px) {
+            .modal {
+                max-height: calc(100vh - 180px); /* More space for bottom nav on mobile */
+                padding: 20px 16px;
+                margin-bottom: 20px;
+            }
+            
+            .modal-actions {
+                position: sticky;
+                bottom: -16px;
+                margin-top: 16px;
+                padding-bottom: 16px;
+                background: var(--surface);
+            }
+        }
+
+        /* Custom scrollbar for modal */
+        .modal::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 3px;
+        }
+
+        .modal::-webkit-scrollbar-thumb {
+            background: var(--border-dark);
+            border-radius: 3px;
+        }
+
+        .modal::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <button class="header-btn" onclick="window.location.href='index.html'" title="Back to Dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <h1 id="page-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <span id="repo-name-display">Loading...</span>
+    </h1>
+    <button class="header-btn" onclick="window.location.href='settings.html'" title="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68 1.65 1.65 0 0 0 10 3.17V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+</div>
+
+<!-- VIEW: FILE EXPLORER -->
+<div class="view active" id="view-explorer" style="padding-top: 10px;">
+    <div class="breadcrumb" id="breadcrumb"></div>
+    <div class="search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="file-search" placeholder="Search files in this directory..." oninput="filterFiles()">
+    </div>
+    <div class="file-tree" id="file-tree">
+        <div class="loading"><div class="spinner"></div><p>Loading files...</p></div>
+    </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-rename">
+    <div class="modal">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Rename / Move File</h3>
+        <div class="form-group"><label>New Path</label><input type="text" id="rename-new-path" placeholder="new-folder/new-filename.txt"><small>Enter the full new path relative to the repository root.</small></div>
+        <div class="form-group">
+            <label>Commit Message</label>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="rename-commit" placeholder="Rename/move file" style="flex: 1;">
+                <button type="button" class="action-btn" onclick="startVoiceDictation('rename-commit')" title="Voice to Text" style="padding: 12px; min-width: 44px; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="modal-actions"><button onclick="closeModal('modal-rename')">Cancel</button><button class="btn-primary" onclick="confirmRename()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Rename</button></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-new-file">
+    <div class="modal">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg> Create New File</h3>
+        <div class="form-group"><label>File Name</label><input type="text" id="new-file-name" placeholder="index.html"></div>
+        <div class="form-group"><label>Content</label><textarea id="new-file-content" placeholder="Enter file content..." style="width:100%;min-height:150px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:8px;font-family:monospace;"></textarea></div>
+        <div class="form-group">
+            <label>Target Branch</label>
+            <input type="text" id="new-file-branch" list="branch-datalist" value="main" placeholder="main or new-branch-name">
+            <datalist id="branch-datalist"></datalist>
+            <small style="color:var(--text-muted);display:block;margin-top:4px;">Type a new name to create a branch, or select an existing one.</small>
+        </div>
+        <div class="form-group">
+            <label>Commit Message</label>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="new-file-commit" placeholder="Create new file" style="flex: 1;">
+                <button type="button" class="action-btn" onclick="startVoiceDictation('new-file-commit')" title="Voice to Text" style="padding: 12px; min-width: 44px; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                </button>
+            </div>
+            <div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
+                <button type="button" class="repo-action-btn" onclick="fillCommit('new-file-commit', 'Initial commit')">Initial commit</button>
+                <button type="button" class="repo-action-btn" onclick="fillCommit('new-file-commit', 'Add new file')">Add new file</button>
+                <button type="button" class="repo-action-btn" onclick="fillCommit('new-file-commit', 'Fix bug')">Fix bug</button>
+            </div>
+        </div>
+        <div class="modal-actions"><button onclick="closeModal('modal-new-file')">Cancel</button><button class="btn-primary" onclick="createNewFile()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Create</button></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-new-folder">
+    <div class="modal">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg> Create New Folder</h3>
+        <div class="form-group"><label>Folder Name</label><input type="text" id="new-folder-name" placeholder="my-folder"></div>
+        <div class="form-group">
+            <label>Commit Message</label>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="new-folder-commit" placeholder="Create folder" style="flex: 1;">
+                <button type="button" class="action-btn" onclick="startVoiceDictation('new-folder-commit')" title="Voice to Text" style="padding: 12px; min-width: 44px; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="modal-actions"><button onclick="closeModal('modal-new-folder')">Cancel</button><button class="btn-primary" onclick="createNewFolder()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Create</button></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-upload">
+    <div class="modal">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload Files</h3>
+        <div class="file-drop" id="modal-drop-zone">
+            <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Tap to select files</p>
+            <input type="file" id="modal-file-input" multiple>
+        </div>
+        <div id="modal-file-list"></div>
+        <div class="form-group">
+            <label>Target Branch</label>
+            <input type="text" id="upload-branch" list="branch-datalist" value="main" placeholder="main or new-branch-name">
+            <small style="color:var(--text-muted);display:block;margin-top:4px;">Type a new name to create a branch, or select an existing one.</small>
+        </div>
+        <div class="form-group">
+            <label>Commit Message</label>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="upload-commit" placeholder="Upload files" style="flex: 1;">
+                <button type="button" class="action-btn" onclick="startVoiceDictation('upload-commit')" title="Voice to Text" style="padding: 12px; min-width: 44px; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="modal-actions"><button onclick="closeModal('modal-upload')">Cancel</button><button class="btn-primary" id="modal-upload-btn" onclick="uploadModalFiles()" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</button></div>
+    </div>
+</div>
+
+<div class="progress-container" id="progress-container">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-text" id="progress-text">Preparing...</div>
+</div>
+<div class="copy-toast" id="copy-toast">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;display:inline;vertical-align:middle;margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg>
+    Copied to clipboard!
+</div>
+<div id="status"></div>
+
+<!-- PREMIUM BOTTOM NAVIGATION -->
+<div class="bottom-nav" id="bottom-nav">
+    <div class="nav-container">
+        <a href="index.html" class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span class="nav-label">Dashboard</span>
+        </a>
+        <button class="nav-item" onclick="refreshExplorer()">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+            </svg>
+            <span class="nav-label">Refresh</span>
+        </button>
+        <div class="nav-create">
+            <button class="nav-create-btn" onclick="showNewFileModal()" title="New File">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+            </button>
+        </div>
+        <button class="nav-item" onclick="downloadRepo()">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <span class="nav-label">Download</span>
+        </button>
+    </div>
+</div>
+
+<script>
+// ==================== PWA & SERVICE WORKER ====================
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(console.error);
+    });
+}
+
+// ==================== SVG ICONS & STATE ====================
+const ICONS = {
+    folder: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
+    file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+    download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+    move: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+    image: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+    archive: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>',
+    terminal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>',
+    code: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+    lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'
+};
+
+let state = {
+    owner: '', token: '', currentRepo: '', currentBranch: 'main', currentPath: '',
+    files: [], modalUploadFiles: [], renameTarget: null
+};
+
+// ==================== INIT & AUTH ====================
+async function init() {
+    try {
+        const res = await fetch('/api/token', { credentials: 'include' });
+        if (!res.ok) throw new Error('Auth failed');
+        const data = await res.json();
+        state.token = data.token;
+        
+        const userRes = await fetch(`https://api.github.com/user`, { headers: { 'Authorization': `token ${state.token}` } });
+        const userData = await userRes.json();
+        state.owner = userData.login;
+    } catch (err) {
+        console.error('Auth check failed', err);
+        window.location.href = 'index.html';
+        return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    state.currentRepo = params.get('repo');
+    state.currentBranch = params.get('branch') || 'main';
+
+    if (!state.currentRepo) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    document.getElementById('repo-name-display').textContent = state.currentRepo;
+    
+    loadDirectory('');
+    loadBranches();
+    setupDropZone('modal-drop-zone', 'modal-file-input', handleModalFileSelect);
+}
+
+async function loadBranches() {
+    try {
+        const res = await githubAPI(`/repos/${state.owner}/${state.currentRepo}/branches?per_page=100`);
+        const branches = await res.json();
+        const branchList = document.getElementById('branch-datalist');
+        if (branchList) {
+            branchList.innerHTML = branches.map(b => `<option value="${b.name}">`).join('');
+        }
+    } catch (e) {
+        console.error('Failed to load branches', e);
+    }
+}
+
+// ==================== GITHUB API ====================
+async function githubAPI(endpoint, options = {}) {
+    const url = `https://api.github.com${endpoint}`;
+    const headers = { 'Authorization': `token ${state.token}`, 'Accept': 'application/vnd.github.v3+json', ...options.headers };
+    const response = await fetch(url, { ...options, headers });
+    if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.message || `GitHub API error: ${response.status}`);
+    }
+    return response;
+}
+
+// ==================== FILE EXPLORER ====================
+async function loadDirectory(path) {
+    state.currentPath = path;
+    renderBreadcrumb();
+    document.getElementById('file-tree').innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading...</p></div>';
+    document.getElementById('file-search').value = '';
+    try {
+        const res = await githubAPI(`/repos/${state.owner}/${state.currentRepo}/contents/${path}?ref=${state.currentBranch}`);
+        state.files = await res.json();
+        renderFileTree(state.files);
+    } catch (err) {
+        document.getElementById('file-tree').innerHTML = `<div class="empty-state"><div class="icon">${ICONS.x}</div><p>Error: ${err.message}</p><button onclick="window.location.href='index.html'" class="btn-primary" style="margin-top:16px;">Back to Dashboard</button></div>`;
+    }
+}
+
+function renderBreadcrumb() {
+    const bc = document.getElementById('breadcrumb');
+    const parts = state.currentPath ? state.currentPath.split('/') : [];
+    let html = `<span onclick="loadDirectory('')">${ICONS.folder} ${state.currentRepo}</span>`;
+    let accumulated = '';
+    parts.forEach((part, i) => {
+        accumulated += (accumulated ? '/' : '') + part;
+        html += `<span class="sep">/</span><span onclick="loadDirectory('${accumulated}')">${part}</span>`;
+    });
+    bc.innerHTML = html;
+}
+
+function renderFileTree(items) {
+    const tree = document.getElementById('file-tree');
+    if (items.length === 0) { tree.innerHTML = `<div class="empty-state"><div class="icon">${ICONS.folder}</div><p>Empty directory</p></div>`; return; }
+    const sorted = items.sort((a, b) => {
+        if (a.type === 'dir' && b.type !== 'dir') return -1;
+        if (a.type !== 'dir' && b.type === 'dir') return 1;
+        return a.name.localeCompare(b.name);
+    });
+    tree.innerHTML = sorted.map(item => {
+        const isFolder = item.type === 'dir';
+        const icon = isFolder ? `<span style="color:var(--accent)">${ICONS.folder}</span>` : getFileIconSVG(item.name);
+        const size = isFolder ? '' : formatSize(item.size);
+        return `
+            <div class="tree-item ${isFolder ? 'folder' : 'file'}" draggable="${!isFolder}"
+                 ondragstart="dragStart(event, '${item.path}', '${item.type}')" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropItem(event, '${item.path}', '${isFolder}')"
+                 onclick="${isFolder ? `loadDirectory('${item.path}')` : `openFile('${item.path}', '${item.sha}')`}">
+                <span class="icon">${icon}</span>
+                <span class="name">${item.name}</span>
+                ${size ? `<span class="size">${size}</span>` : ''}
+                <div class="item-actions">
+                    ${!isFolder ? `<button class="item-action-btn" onclick="event.stopPropagation(); downloadFile('${item.path}')" title="Download">${ICONS.download}</button>` : ''}
+                    <button class="item-action-btn" onclick="event.stopPropagation(); showRenameModal('${item.path}', '${item.type}', '${item.sha || ''}')" title="Rename/Move">${ICONS.move}</button>
+                    <button class="item-action-btn danger" onclick="event.stopPropagation(); deleteItem('${item.path}', '${item.type}', '${item.sha || ''}')" title="Delete">${ICONS.trash}</button>
+                </div>
+            </div>`;
+    }).join('');
+}
+
+function filterFiles() {
+    const query = document.getElementById('file-search').value.toLowerCase();
+    renderFileTree(query ? state.files.filter(item => item.name.toLowerCase().includes(query)) : state.files);
+}
+function refreshExplorer() { loadDirectory(state.currentPath); triggerHaptic(30); }
+
+// ==================== DRAG AND DROP ====================
+let draggedItem = null;
+function dragStart(event, path, type) {
+    if (type === 'dir') { event.preventDefault(); return; }
+    draggedItem = { path, type };
+    event.target.closest('.tree-item').classList.add('dragging');
+    event.dataTransfer.effectAllowed = 'move';
+}
+function dragOver(event) {
+    event.preventDefault();
+    const target = event.target.closest('.tree-item');
+    if (target && target.classList.contains('folder')) target.classList.add('drag-over');
+}
+function dragLeave(event) {
+    const target = event.target.closest('.tree-item');
+    if (target) target.classList.remove('drag-over');
+}
+async function dropItem(event, targetPath, isFolder) {
+    event.preventDefault(); event.stopPropagation();
+    const target = event.target.closest('.tree-item');
+    if (target) target.classList.remove('drag-over');
+    if (!draggedItem || !isFolder || draggedItem.path === targetPath) return;
+    const fileName = draggedItem.path.split('/').pop();
+    const newPath = targetPath + '/' + fileName;
+    if (confirm(`Move "${fileName}" to "${targetPath}/"?`)) await moveFile(draggedItem.path, newPath);
+    draggedItem = null;
+}
+
+async function moveFile(oldPath, newPath) {
+    showProgress('Moving file...');
+    try {
+        const res = await githubAPI(`/repos/${state.owner}/${state.currentRepo}/contents/${oldPath}?ref=${state.currentBranch}`);
+        const data = await res.json();
+        await githubAPI(`/repos/${state.owner}/${state.currentRepo}/contents/${newPath}`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Move ${oldPath} to ${newPath}`, content: data.content, branch: state.currentBranch })
+        });
+        await githubAPI(`/repos/${state.owner}/${state.currentRepo}/contents/${oldPath}`, {
+            method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Delete ${oldPath} (moved to ${newPath})`, sha: data.sha, branch: state.currentBranch })
+        });
+        hideProgress(); showStatus('File moved successfully!', 'success'); loadDirectory(state.currentPath);
+    } catch (err) { hideProgress(); showStatus(`Error: ${err.message}`, 'error'); }
+}
+
+// ==================== FILE OPERATIONS ====================
+function openFile(path, sha) {
+    triggerHaptic(30);
+    const params = new URLSearchParams({ repo: state.currentRepo, path: path, sha: sha, branch: state.currentBranch });
+    window.location.href = `editor.html?${params.toString()}`;
+}
+
+function downloadFile(path) {
+    triggerHaptic(30);
+    window.open(`https://raw.githubusercontent.com/${state.owner}/${state.currentRepo}/${state.currentBranch}/${path}`, '_blank');
+}
+
+function downloadRepo() {
+    triggerHaptic(30);
+    window.open(`https://github.com/${state.owner}/${state.currentRepo}/archive/refs/heads/${state.currentBranch}.zip`, '_blank');
+    showStatus('Download started!', 'info');
+}
+
+function showRenameModal(path, type, sha) {
+    triggerHaptic(30);
+    state.renameTarget = { path, type, sha };
+    document.getElementById('rename-new-path').value = path;
+    document.getElementById('rename-commit').value = `Rename/move ${path.split('/').pop()}`;
+    document.getElementById('modal-rename').classList.add('active');
+}
+
+async function confirmRename() {
+    const newPath = document.getElementById('rename-new-path').value.trim();
+    const commitMsg = document.getElementById('rename-commit').value || 'Rename/move file';
+    if (!newPath) return showStatus('Please enter a new path', 'error');
+    if (newPath === state.renameTarget.path) return showStatus('New path is the same as current', 'error');
+    closeModal('modal-rename');
+    if (state.renameTarget.type === 'dir') { showStatus('Renaming folders requires moving all contents. Use file-level rename.', 'error'); return; }
+    
+    showProgress('Renaming/Moving...');
+    try {
+        const res = await githubAPI(`/repos/${state.owner}/${state.currentRepo}/contents/${state.renameTarget.path}?ref=${state.currentBranch}`);
+        const data = await res.json();
+        await githubAPI(`/repos/${state.owner}/${state.currentRepo}/contents/${newPath}`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: commitMsg, content: data.content, branch: state.currentBranch })
+        });
+        await githubAPI(`/repos/${state.owner}/${state.currentRepo}/contents/${state.renameTarget.path}`, {
+            method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Delete old file (renamed to ${newPath})`, sha: data.sha, branch: state.currentBranch })
+        });
+        hideProgress(); showStatus('File renamed/moved successfully!', 'success');
+        loadDirectory(state.currentPath);
+    } catch (err) { hideProgress(); showStatus(`Error: ${err.message}`, 'error'); }
+}
+
+async function deleteItem(path, type, sha) {
+    triggerHaptic(30);
+    const name = path.split('/').pop();
+    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    showProgress('Deleting...');
+    try {
+        if (type === 'dir') { showStatus('Folder deletion: Please delete files individually or use GitHub web.', 'info'); hideProgress(); return; }
+        await githubAPI(`/repos/${state.owner}/${state.currentRepo}/contents/${path}`, {
+            method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Delete ${name}`, sha: sha, branch: state.currentBranch })
+        });
+        hideProgress(); showStatus('Item deleted!', 'success'); loadDirectory(state.currentPath);
+    } catch (err) { hideProgress(); showStatus(`Error: ${err.message}`, 'error'); }
+}
+
+// ==================== NEW FILE / FOLDER / UPLOAD ====================
+function showNewFileModal() {
+    triggerHaptic(30);
+    document.getElementById('new-file-name').value = '';
+    document.getElementById('new-file-content').value = '';
+    document.getElementById('new-file-commit').value = 'Create new file';
+    document.getElementById('modal-new-file').classList.add('active');
+}
+function showNewFolderModal() {
+    triggerHaptic(30);
+    document.getElementById('new-folder-name').value = '';
+    document.getElementById('new-folder-commit').value = 'Create folder';
+    document.getElementById('modal-new-folder').classList.add('active');
+}
+function showUploadModal() {
+    triggerHaptic(30);
+    state.modalUploadFiles = [];
+    document.getElementById('modal-file-list').innerHTML = '';
+    document.getElementById('upload-commit').value = 'Upload files';
+    document.getElementById('modal-upload-btn').disabled = true;
+    document.getElementById('modal-upload').classList.add('active');
+}
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+async function createNewFile() {
+    const name = document.getElementById('new-file-name').value.trim();
+    if (!name) return showStatus('Please enter a file name', 'error');
+    const branch = document.getElementById('new-file-branch').value.trim() || 'main';
+    const path = state.currentPath ? `${state.currentPath}/${name}` : name;
+    closeModal('modal-new-file');
+    showProgress('Creating file...');
+    try {
+        await githubAPI(`/repos/${state.owner}/${state.currentRepo}/contents/${path}`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: document.getElementById('new-file-commit').value || 'Create new file', content: btoa(unescape(encodeURIComponent(document.getElementById('new-file-content').value))), branch: branch })
+        });
+        hideProgress(); 
+        let msg = 'File created!';
+        if (branch !== 'main') {
+            msg += ` <a href="https://github.com/${state.owner}/${state.currentRepo}/compare/main...${branch}?expand=1" target="_blank" style="color:var(--primary);text-decoration:underline;margin-left:8px;font-weight:600;">Create Pull Request ↗</a>`;
+        }
+        showStatus(msg, 'success'); 
+        loadDirectory(state.currentPath);
+    } catch (err) { hideProgress(); showStatus(`Error: ${err.message}`, 'error'); }
+}
+
+async function createNewFolder() {
+    const name = document.getElementById('new-folder-name').value.trim();
+    if (!name) return showStatus('Please enter a folder name', 'error');
+    const path = state.currentPath ? `${state.currentPath}/${name}/.gitkeep` : `${name}/.gitkeep`;
+    closeModal('modal-new-folder');
+    showProgress('Creating folder...');
+    try {
+        await githubAPI(`/repos/${state.owner}/${state.currentRepo}/contents/${path}`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: document.getElementById('new-folder-commit').value || 'Create folder', content: btoa(''), branch: state.currentBranch })
+        });
+        hideProgress(); showStatus('Folder created!', 'success'); loadDirectory(state.currentPath);
+    } catch (err) { hideProgress(); showStatus(`Error: ${err.message}`, 'error'); }
+}
+
+async function handleModalFileSelect(files) {
+    state.modalUploadFiles = Array.from(files);
+    document.getElementById('modal-file-list').innerHTML = state.modalUploadFiles.map(f => `<div style="padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:4px;margin-bottom:4px;font-size:13px;font-family:monospace;display:flex;align-items:center;gap:8px;">${ICONS.file} ${f.name} (${formatSize(f.size)})</div>`).join('');
+    document.getElementById('modal-upload-btn').disabled = state.modalUploadFiles.length === 0;
+}
+
+async function uploadModalFiles() {
+    const commitMsg = document.getElementById('upload-commit').value || 'Upload files';
+    const branch = document.getElementById('upload-branch').value.trim() || 'main';
+    closeModal('modal-upload');
+    showProgress('Uploading...');
+    try {
+        for (let i = 0; i < state.modalUploadFiles.length; i++) {
+            const file = state.modalUploadFiles[i];
+            updateProgress((i + 1) / state.modalUploadFiles.length, `Uploading ${i + 1}/${state.modalUploadFiles.length}: ${file.name}`);
+            const content = await readFileAsBase64(file);
+            const path = state.currentPath ? `${state.currentPath}/${file.name}` : file.name;
+            let sha = null;
+            try { sha = (await (await githubAPI(`/repos/${state.owner}/${state.currentRepo}/contents/${path}?ref=${branch}`)).json()).sha; } catch (e) {}
+            await githubAPI(`/repos/${state.owner}/${state.currentRepo}/contents/${path}`, {
+                method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: `${commitMsg}: ${file.name}`, content, branch: branch, ...(sha && { sha }) })
+            });
+            await new Promise(r => setTimeout(r, 150));
+        }
+        hideProgress(); 
+        let msg = `${state.modalUploadFiles.length} files uploaded!`;
+        if (branch !== 'main') {
+            msg += ` <a href="https://github.com/${state.owner}/${state.currentRepo}/compare/main...${branch}?expand=1" target="_blank" style="color:var(--primary);text-decoration:underline;margin-left:8px;font-weight:600;">Create Pull Request ↗</a>`;
+        }
+        showStatus(msg, 'success');
+        state.modalUploadFiles = []; loadDirectory(state.currentPath);
+    } catch (err) { hideProgress(); showStatus(`Error: ${err.message}`, 'error'); }
+}
+
+function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+// ==================== UTILITIES & MOBILE UX ====================
+function getFileIconSVG(name) {
+    const ext = name.split('.').pop().toLowerCase();
+    const iconMap = { 'html': { icon: 'globe', color: '#e34c26' }, 'css': { icon: 'code', color: '#264de4' }, 'js': { icon: 'code', color: '#f0db4f' }, 'ts': { icon: 'code', color: '#3178c6' }, 'json': { icon: 'code', color: '#f59e0b' }, 'md': { icon: 'file', color: '#2563eb' }, 'txt': { icon: 'file', color: '#64748b' }, 'py': { icon: 'code', color: '#3776ab' }, 'jpg': { icon: 'image', color: '#10b981' }, 'png': { icon: 'image', color: '#10b981' }, 'zip': { icon: 'archive', color: '#f59e0b' }, 'yml': { icon: 'terminal', color: '#cb171e' }, 'sh': { icon: 'terminal', color: '#4eaa25' } };
+    const info = iconMap[ext] || { icon: 'file', color: '#64748b' };
+    return `<span style="color:${info.color}">${ICONS[info.icon]}</span>`;
+}
+
+function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function showProgress(text) {
+    document.getElementById('progress-container').style.display = 'block';
+    document.getElementById('progress-text').textContent = text;
+    document.getElementById('progress-fill').style.width = '50%';
+}
+function updateProgress(percent, text) {
+    document.getElementById('progress-fill').style.width = `${percent * 100}%`;
+    if (text) document.getElementById('progress-text').textContent = text;
+}
+function hideProgress() {
+    document.getElementById('progress-fill').style.width = '100%';
+    setTimeout(() => { document.getElementById('progress-container').style.display = 'none'; }, 500);
+}
+
+function showStatus(msg, type = 'info') {
+    const el = document.getElementById('status');
+    const iconMap = { 
+        'success': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', 
+        'error': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>', 
+        'info': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+    };
+    el.innerHTML = `${iconMap[type] || iconMap.info}<span class="status-message">${msg}</span><div class="status-close" onclick="dismissStatus(event)" title="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>`;
+    el.className = type;
+    el.style.display = 'flex';
+    if (type === 'success' || type === 'info') {
+        if (el.autoDismissTimer) clearTimeout(el.autoDismissTimer);
+        el.autoDismissTimer = setTimeout(() => dismissStatus(), 4000);
+    }
+    setupSwipeDismiss(el);
+}
+
+function dismissStatus(event) {
+    if (event) event.stopPropagation();
+    const el = document.getElementById('status');
+    el.classList.add('dismissing');
+    setTimeout(() => { el.style.display = 'none'; el.classList.remove('dismissing'); }, 300);
+}
+
+function setupSwipeDismiss(element) {
+    let startX = 0, currentX = 0, isSwiping = false;
+    element.addEventListener('touchstart', e => { startX = e.touches[0].clientX; isSwiping = true; }, { passive: true });
+    element.addEventListener('touchmove', e => {
+        if (!isSwiping) return;
+        currentX = e.touches[0].clientX;
+        const diff = currentX - startX;
+        if (Math.abs(diff) > 10) {
+            element.style.transform = `translateX(-50%) translateX(${diff}px)`;
+            element.style.opacity = 1 - (Math.abs(diff) / 400);
+        }
+    }, { passive: true });
+    element.addEventListener('touchend', () => {
+        if (!isSwiping) return;
+        if (Math.abs(currentX - startX) > 100) {
+            element.classList.add(currentX < startX ? 'swiping-left' : 'dismissing');
+            setTimeout(() => { element.style.display = 'none'; element.classList.remove('dismissing', 'swiping-left'); element.style.transform = ''; element.style.opacity = '1'; }, 300);
+        } else {
+            element.style.transform = 'translateX(-50%)'; element.style.opacity = '1';
+        }
+        isSwiping = false; currentX = 0;
+    }, { passive: true });
+}
+
+function setupDropZone(zoneId, inputId, handler) {
+    const zone = document.getElementById(zoneId);
+    const input = document.getElementById(inputId);
+    zone.addEventListener('click', () => input.click());
+    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', (e) => { e.preventDefault(); zone.classList.remove('dragover'); handler(e.dataTransfer.files); });
+    input.addEventListener('change', (e) => handler(e.target.files));
+}
+
+// ==================== MOBILE UX HELPERS ====================
+function startVoiceDictation(inputId) {
+    triggerHaptic(30);
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        const input = document.getElementById(inputId);
+        input.placeholder = "Listening...";
+        recognition.onresult = function(event) {
+            input.value = event.results[0][0].transcript;
+            input.placeholder = "e.g., Update README";
+            triggerHaptic(50);
+        };
+        recognition.onerror = function() {
+            input.placeholder = "Voice failed, type manually";
+            showStatus('Voice recognition failed. Please type.', 'warning');
+        };
+        recognition.start();
+        showStatus('Listening... Speak your commit message', 'info');
+    } else {
+        showStatus('Voice recognition not supported in this browser', 'error');
+    }
+}
+
+function fillCommit(inputId, text) {
+    document.getElementById(inputId).value = text;
+    triggerHaptic(30);
+}
+
+function triggerHaptic(duration = 50) {
+    if (navigator.vibrate) navigator.vibrate(duration);
+}
+
+// Initialize
+init();
+</script>
+</body>
+</html>
