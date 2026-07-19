@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>StackFam Editor</title>
+    <link rel="stylesheet" href="geefox.css">
+        <link rel="stylesheet" href="editor.css">
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/markdown/markdown.min.js"></script>
+    
+    <!-- JS Beautify -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-js.min.js"></script>
+    
+    <style>
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="header-btn" onclick="window.location.href='index.html'" title="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <div style="flex:1; overflow:hidden;">
+            <h1 id="editor-filename">Loading...</h1>
+            <span id="editor-lang" style="font-size:11px; color:var(--text-muted);">...</span>
+        </div>
+    </div>
+
+    <div class="editor-actions">
+        <button class="editor-action-btn" onclick="copyContent()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+        </button>
+        <button class="editor-action-btn" onclick="downloadContent()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+        </button>
+        <button class="editor-action-btn" onclick="toggleManualLinking()" title="Manual File Links">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Link Files
+        </button>
+        <button class="editor-action-btn" onclick="window.find()" title="Find in Page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Find
+        </button>
+        <button class="editor-action-btn" onclick="formatCode()" title="Format Code">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Format
+        </button>
+        <button class="editor-action-btn preview-btn" onclick="openPreview()" title="Live Preview">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            Preview
+        </button>
+        <button class="editor-action-btn" onclick="deleteFile()" style="color: var(--danger, #ef4444); border-color: var(--danger, #ef4444);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Delete
+        </button>
+    </div>
+
+
+    <!-- File Tabs -->
+    <div class="file-tabs" id="file-tabs" style="display: none;">
+        <div class="file-tab active" onclick="switchFile('html')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            HTML
+        </div>
+        <div class="file-tab" onclick="switchFile('css')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            CSS
+        </div>
+        <div class="file-tab" onclick="switchFile('js')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            JS
+        </div>
+    </div>
+
+    <!-- MOBILE SHORTCUT KEYPAD WITH SVGS -->
+    <div class="mobile-keypad">
+        <button class="keypad-btn" onclick="insertText('\t')" title="Tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 01-4 4H4"/></svg>
+        </button>
+        <button class="keypad-btn" onclick="wrapText('<', '>')" title="Wrap in Tags">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </button>
+        <button class="keypad-btn" onclick="wrapText('{', '}')" title="Wrap in Braces">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H7a2 2 0 00-2 2v5a2 2 0 01-2 2 2 2 0 012 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 002-2v-5c0-1.1.9-2 2-2a2 2 0 01-2-2V5a2 2 0 00-2-2h-1"/></svg>
+        </button>
+        <button class="keypad-btn" onclick="wrapText('(', ')')" title="Wrap in Parentheses">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </button>
+        <button class="keypad-btn" onclick="wrapText('[', ']')" title="Wrap in Brackets">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        </button>
+        <button class="keypad-btn" onclick="wrapText('\'', '\'')" title="Single Quotes">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 00-3 3v7a3 3 0 006 0V5a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg>
+        </button>
+        <button class="keypad-btn" onclick="wrapText('"', '"')" title="Double Quotes">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/></svg>
+        </button>
+        <button class="keypad-btn" onclick="insertText('=>')" title="Arrow Function">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+        <button class="keypad-btn" onclick="insertText(';')" title="Semicolon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="20" x2="20" y2="4"/><line x1="4" y1="4" x2="20" y2="20"/></svg>
+        </button>
+        <button class="keypad-btn undo-btn" onclick="undoAction()" title="Undo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
+        </button>
+        <button class="keypad-btn" onclick="deleteSelection()" title="Delete" style="color: var(--danger, #ef4444);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        </button>
+    </div>
+
+    <div id="editor-container">
+        <div class="loading"><div class="spinner"></div><p>Loading file...</p></div>
+    </div>
+
+    <!-- Manual File Linking Section -->
+    <div id="manual-linking" style="display: none; padding: 12px 16px; background: var(--surface, #1e1e1e); border-top: 1px solid var(--border, #333);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <h3 style="font-size: 14px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                Manual File Links
+            </h3>
+            <button onclick="toggleManualLinking()" style="background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="form-group" style="margin-bottom: 8px;">
+            <label style="font-size: 11px; color: var(--text-muted);">CSS Files (comma-separated paths)</label>
+            <input type="text" id="manual-css" placeholder="css/style.css, assets/main.css" onchange="updateManualLinks()">
+        </div>
+        <div class="form-group">
+            <label style="font-size: 11px; color: var(--text-muted);">JS Files (comma-separated paths)</label>
+            <input type="text" id="manual-js" placeholder="js/app.js, scripts/main.js" onchange="updateManualLinks()">
+        </div>
+        <button onclick="loadManualFiles()" class="btn-primary" style="margin-top: 8px; padding: 8px; font-size: 13px;">
+            Load Linked Files
+        </button>
+    </div>
+
+    <div class="footer">
+
+
+
+        <div class="form-group">
+            <label style="font-size:12px; color:var(--text-muted); font-weight:600;">Commit Message</label>
+            <input type="text" id="commit-msg" placeholder="e.g., Update styling...">
+        </div>
+        <div class="btn-row">
+            <button class="btn-primary" onclick="saveFile()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Save & Commit
+            </button>
+        </div>
+    </div>
+
+    <!-- LIVE PREVIEW MODAL -->
+    <div id="preview-modal">
+        <div class="preview-header">
+            <span style="font-weight:600; font-size:15px;">Live Preview</span>
+            <div style="flex:1;"></div>
+            <button onclick="closePreview()" style="background:none; border:none; color:white; cursor:pointer; padding:8px; border-radius:6px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <iframe id="preview-frame"></iframe>
+    </div>
+
+    <div id="status" class="status-toast"></div>
+
+    <script>
+        let editor = null;
+        let fileSha = '';
+        let filePath = '';
+        let repoName = '';
+        let branch = '';
+        let owner = '';
+        let token = '';
+        let autoSaveInterval = null;
+        let currentFile = 'html';
+        let files = { html: '', css: '', js: '' };
+        let fileShas = { html: '', css: '', js: '' };
+
+        function getParams() {
+            const params = new URLSearchParams(window.location.search);
+            return { 
+                repo: params.get('repo'), 
+                path: params.get('path'), 
+                sha: params.get('sha'), 
+                branch: params.get('branch') || 'main' 
+            };
+        }
+
+        function getMode(path) {
+            const ext = path.split('.').pop().toLowerCase();
+            const modeMap = {
+                'js': 'javascript', 'jsx': 'javascript', 'mjs': 'javascript', 'ts': 'javascript',
+                'html': 'xml', 'htm': 'xml', 'xml': 'xml',
+                'css': 'css', 'scss': 'css', 'sass': 'css',
+                'json': { name: 'javascript', json: true },
+                'py': 'python',
+                'md': 'markdown', 'markdown': 'markdown'
+            };
+            return modeMap[ext] || 'plaintext';
+        }
+
+        function getLanguage(path) {
+            const ext = path.split('.').pop().toLowerCase();
+            const langMap = { 
+                'html': 'HTML', 'css': 'CSS', 'js': 'JavaScript', 'json': 'JSON', 
+                'md': 'Markdown', 'py': 'Python', 'ts': 'TypeScript' 
+            };
+            return langMap[ext] || 'Plain Text';
+        }
+
+        async function init() {
+            const { repo, path, sha, branch: br } = getParams();
+            
+            if (!repo || !path) { 
+                document.getElementById('editor-container').innerHTML = 
+                    '<div class="error-msg"><h3>Missing Parameters</h3><p>The editor was opened without proper file information.</p><button class="btn-primary" onclick="window.location.href=\'index.html\'" style="margin-top:16px;">Go Back</button></div>';
+                return; 
+            }
+
+            repoName = repo; 
+            filePath = path; 
+            fileSha = sha || ''; 
+            branch = br;
+            owner = localStorage.getItem('gh_owner') || '';
+            token = localStorage.getItem('gh_token') || '';
+
+            if (!owner || !token) {
+                alert('GitHub credentials not found. Please log in from the main app.');
+                window.location.href = 'index.html'; 
+                return;
+            }
+
+            document.getElementById('editor-filename').textContent = path.split('/').pop();
+            document.getElementById('editor-lang').textContent = getLanguage(path);
+            document.getElementById('commit-msg').value = `Update ${path.split('/').pop()}`;
+
+            // Show file tabs for HTML files
+            if (path.endsWith('.html') || path.endsWith('.htm')) {
+                document.getElementById('file-tabs').style.display = 'flex';
+                await loadAllFiles();
+                loadSavedManualLinks();
+            } else {
+                await loadCurrentFile();
+            }
+
+        }
+
+                async function loadAllFiles() {
+            try {
+                // Load HTML (current file)
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repoName}/contents/${filePath}?ref=${branch}`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                const data = await res.json();
+                files.html = atob(data.content.replace(/\n/g, ''));
+                fileShas.html = data.sha;
+
+                // Parse HTML to find linked CSS and JS files
+                const linkedFiles = parseLinkedResources(files.html);
+                
+                // Get directory contents to find the linked files
+                const dirRes = await fetch(`https://api.github.com/repos/${owner}/${repoName}/contents/?ref=${branch}`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                const dirData = await dirRes.json();
+                
+                // Load linked CSS files
+                for (const cssPath of linkedFiles.css) {
+                    const cssFile = findFileInDir(dirData, cssPath);
+                    if (cssFile) {
+                        try {
+                            const cssRes = await fetch(cssFile.url, { 
+                                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } 
+                            });
+                            const cssData = await cssRes.json();
+                            files.css += '\n/* From: ' + cssPath + ' */\n' + atob(cssData.content.replace(/\n/g, ''));
+                            fileShas.css = cssData.sha;
+                        } catch (e) {
+                            console.log('Could not load CSS:', cssPath);
+                        }
+                    }
+                }
+                
+                // Load linked JS files
+                for (const jsPath of linkedFiles.js) {
+                    const jsFile = findFileInDir(dirData, jsPath);
+                    if (jsFile) {
+                        try {
+                            const jsRes = await fetch(jsFile.url, { 
+                                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } 
+                            });
+                            const jsData = await jsRes.json();
+                            files.js += '\n// From: ' + jsPath + '\n' + atob(jsData.content.replace(/\n/g, ''));
+                            fileShas.js = jsData.sha;
+                        } catch (e) {
+                            console.log('Could not load JS:', jsPath);
+                        }
+                    }
+                }
+
+                document.getElementById('editor-container').innerHTML = '';
+                initEditor('html');
+                showStatus('Loaded HTML with ' + linkedFiles.css.length + ' CSS and ' + linkedFiles.js.length + ' JS files', 'success');
+                
+            } catch (err) {
+                document.getElementById('editor-container').innerHTML = 
+                    `<div class="error-msg"><h3>Error Loading Files</h3><p>${err.message}</p><button class="btn-primary" onclick="window.location.href='index.html'" style="margin-top:16px;">Go Back</button></div>`;
+            }
+        }
+
+        function parseLinkedResources(html) {
+            const linked = { css: [], js: [] };
+            
+            // Find CSS links: <link rel="stylesheet" href="...">
+            const linkRegex = /<link[^>]*rel=["']stylesheet["'][^>]*href=["']([^"']+)["'][^>]*>/gi;
+            let match;
+            while ((match = linkRegex.exec(html)) !== null) {
+                const href = match[1];
+                if (!href.startsWith('http') && !href.startsWith('//')) {
+                    const resolved = resolvePath(filePath, href);
+                    linked.css.push(resolved);
+                }
+            }
+            
+            // Find JS scripts: <script src="...">
+            const scriptRegex = /<script[^>]*src=["']([^"']+)["'][^>]*>/gi;
+            while ((match = scriptRegex.exec(html)) !== null) {
+                const src = match[1];
+                if (!src.startsWith('http') && !src.startsWith('//')) {
+                    const resolved = resolvePath(filePath, src);
+                    linked.js.push(resolved);
+                }
+            }
+            
+            return linked;
+        }
+
+        function resolvePath(currentPath, relativePath) {
+            relativePath = relativePath.split('?')[0].split('#')[0];
+            if (relativePath.startsWith('/')) {
+                return relativePath.substring(1);
+            }
+            const currentDir = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+            while (relativePath.startsWith('../')) {
+                const lastSlash = currentDir.lastIndexOf('/', currentDir.length - 2);
+                if (lastSlash === -1) break;
+                relativePath = relativePath.substring(3);
+            }
+            return currentDir + relativePath;
+        }
+
+        function findFileInDir(dirData, path) {
+            path = path.replace(/^\//, '');
+            return dirData.find(f => f.path === path);
+        }
+
+
+        // Manual file linking functions
+        function toggleManualLinking() {
+            const section = document.getElementById('manual-linking');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function updateManualLinks() {
+            // Save to localStorage
+            const cssFiles = document.getElementById('manual-css').value;
+            const jsFiles = document.getElementById('manual-js').value;
+            localStorage.setItem(`manual_links_${repoName}_css`, cssFiles);
+            localStorage.setItem(`manual_links_${repoName}_js`, jsFiles);
+        }
+
+        async function loadManualFiles() {
+            const cssInput = document.getElementById('manual-css').value;
+            const jsInput = document.getElementById('manual-js').value;
+            
+            if (!cssInput && !jsInput) {
+                showStatus('Please enter file paths', 'error');
+                return;
+            }
+
+            showStatus('Loading manual links...', 'info');
+            
+            try {
+                // Get directory contents
+                const dirRes = await fetch(`https://api.github.com/repos/${owner}/${repoName}/contents/?ref=${branch}`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                const dirData = await dirRes.json();
+                
+                // Load CSS files
+                if (cssInput) {
+                    const cssPaths = cssInput.split(',').map(p => p.trim());
+                    for (const cssPath of cssPaths) {
+                        const cssFile = findFileInDir(dirData, cssPath);
+                        if (cssFile) {
+                            const cssRes = await fetch(cssFile.url, { 
+                                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } 
+                            });
+                            const cssData = await cssRes.json();
+                            files.css += '\n/* From: ' + cssPath + ' */\n' + atob(cssData.content.replace(/\n/g, ''));
+                            showStatus(`Loaded CSS: ${cssPath}`, 'success');
+                        } else {
+                            showStatus(`CSS not found: ${cssPath}`, 'error');
+                        }
+                    }
+                }
+                
+                // Load JS files
+                if (jsInput) {
+                    const jsPaths = jsInput.split(',').map(p => p.trim());
+                    for (const jsPath of jsPaths) {
+                        const jsFile = findFileInDir(dirData, jsPath);
+                        if (jsFile) {
+                            const jsRes = await fetch(jsFile.url, { 
+                                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } 
+                            });
+                            const jsData = await jsRes.json();
+                            files.js += '\n// From: ' + jsPath + '\n' + atob(jsData.content.replace(/\n/g, ''));
+                            showStatus(`Loaded JS: ${jsPath}`, 'success');
+                        } else {
+                            showStatus(`JS not found: ${jsPath}`, 'error');
+                        }
+                    }
+                }
+                
+                // Switch to HTML tab to show combined preview
+                if (editor) {
+                    files.html = editor.getValue();
+                    initEditor('html');
+                }
+                
+                showStatus('Manual files loaded! Click Preview to see result', 'success');
+                
+            } catch (err) {
+                showStatus('Error loading files: ' + err.message, 'error');
+            }
+        }
+
+        // Load saved manual links on init
+        function loadSavedManualLinks() {
+            const cssFiles = localStorage.getItem(`manual_links_${repoName}_css`) || '';
+            const jsFiles = localStorage.getItem(`manual_links_${repoName}_js`) || '';
+            
+            if (cssFiles || jsFiles) {
+                document.getElementById('manual-css').value = cssFiles;
+                document.getElementById('manual-js').value = jsFiles;
+                document.getElementById('manual-linking').style.display = 'block';
+            }
+        }
+
+
+
+        async function loadCurrentFile() {
+            try {
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repoName}/contents/${filePath}?ref=${branch}`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                
+                if (!res.ok) throw new Error(`Failed to load file: ${res.status}`);
+                
+                const data = await res.json();
+                fileSha = data.sha;
+                let content = '';
+                
+                if (data.content) {
+                    content = atob(data.content.replace(/\n/g, ''));
+                } else if (data.download_url) {
+                    const fetchRes = await fetch(data.download_url);
+                    content = await fetchRes.text();
+                }
+
+                document.getElementById('editor-container').innerHTML = '';
+                const mode = getMode(filePath);
+                
+                editor = CodeMirror(document.getElementById('editor-container'), {
+                    value: content,
+                    mode: mode,
+                    theme: 'dracula',
+                    lineNumbers: true,
+                    lineWrapping: true,
+                    indentUnit: 2,
+                    tabSize: 2,
+                    indentWithTabs: false,
+                    matchBrackets: true,
+                    autoCloseBrackets: true,
+                    extraKeys: {
+                        "Ctrl-S": function() { saveFile(); },
+                        "Cmd-S": function() { saveFile(); },
+                        "Ctrl-Z": function() { editor.undo(); }
+                    }
+                });
+
+                // Auto-save draft
+                const draftKey = `stackfam_draft_${owner}_${repoName}_${filePath}`;
+                const draft = localStorage.getItem(draftKey);
+                if (draft && draft !== content) {
+                    if (confirm('You have an unsaved draft. Restore it?')) {
+                        editor.setValue(draft);
+                        showStatus('Draft restored!', 'info');
+                    }
+                }
+
+                autoSaveInterval = setInterval(() => {
+                    if (editor) localStorage.setItem(draftKey, editor.getValue());
+                }, 5000);
+                
+            } catch (err) {
+                document.getElementById('editor-container').innerHTML = 
+                    `<div class="error-msg"><h3>Error Loading File</h3><p>${err.message}</p><button class="btn-primary" onclick="window.location.href='index.html'" style="margin-top:16px;">Go Back</button></div>`;
+            }
+        }
+
+        function initEditor(type) {
+            currentFile = type;
+            
+            // Update active tab
+            document.querySelectorAll('.file-tab').forEach((tab, i) => {
+                tab.classList.toggle('active', (i === 0 && type === 'html') || (i === 1 && type === 'css') || (i === 2 && type === 'js'));
+            });
+
+            if (editor) editor.toTextArea();
+            
+            const mode = type === 'html' ? 'xml' : type === 'css' ? 'css' : 'javascript';
+            const container = document.getElementById('editor-container');
+            container.innerHTML = '';
+            
+            editor = CodeMirror(container, {
+                value: files[type] || '',
+                mode: mode,
+                theme: 'dracula',
+                lineNumbers: true,
+                lineWrapping: true,
+                indentUnit: 2,
+                tabSize: 2,
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                extraKeys: {
+                    "Ctrl-S": function() { saveFile(); },
+                    "Cmd-S": function() { saveFile(); },
+                    "Ctrl-Z": function() { editor.undo(); }
+                }
+            });
+
+            // Auto-save
+            const draftKey = `stackfam_draft_${owner}_${repoName}_${type}`;
+            const draft = localStorage.getItem(draftKey);
+            if (draft && draft !== files[type]) {
+                if (confirm(`You have unsaved changes in ${type.toUpperCase()}. Restore?`)) {
+                    editor.setValue(draft);
+                }
+            }
+
+            autoSaveInterval = setInterval(() => {
+                if (editor) {
+                    files[type] = editor.getValue();
+                    localStorage.setItem(draftKey, files[type]);
+                }
+            }, 5000);
+        }
+
+        window.switchFile = function(type) {
+            if (!editor || confirm('Save current changes before switching?')) {
+                if (editor) files[currentFile] = editor.getValue();
+                initEditor(type);
+            }
+        };
+
+        // --- KEYPAD FUNCTIONS ---
+        window.insertText = function(text) {
+            if (!editor) return;
+            const doc = editor.getDoc();
+            const cursor = doc.getCursor();
+            doc.replaceRange(text, cursor);
+            const newCursor = { line: cursor.line, ch: cursor.ch + text.length };
+            doc.setCursor(newCursor);
+            editor.focus();
+        };
+
+        window.wrapText = function(before, after) {
+            if (!editor) return;
+            const doc = editor.getDoc();
+            const selection = doc.getSelection();
+            if (selection) {
+                doc.replaceSelection(before + selection + after);
+            } else {
+                const cursor = doc.getCursor();
+                doc.replaceRange(before + after, cursor);
+                const newCursor = { line: cursor.line, ch: cursor.ch + before.length };
+                doc.setCursor(newCursor);
+            }
+            editor.focus();
+        };
+
+        window.deleteSelection = function() {
+            if (!editor) return;
+            const doc = editor.getDoc();
+            const selection = doc.getSelection();
+            if (selection) {
+                doc.replaceSelection('');
+            } else {
+                const cursor = doc.getCursor();
+                if (cursor.ch > 0) {
+                    doc.replaceRange('', { line: cursor.line, ch: cursor.ch - 1 }, cursor);
+                } else if (cursor.line > 0) {
+                    const prevLineLen = doc.getLine(cursor.line - 1).length;
+                    doc.replaceRange('', { line: cursor.line - 1, ch: prevLineLen }, cursor);
+                }
+            }
+            editor.focus();
+        };
+
+        window.undoAction = function() {
+            if (editor) {
+                editor.undo();
+                editor.focus();
+            }
+        };
+
+        // --- ACTIONS ---
+        window.formatCode = function() {
+            if (!editor) return;
+            let content = editor.getValue();
+            const ext = filePath.split('.').pop().toLowerCase();
+            try {
+                if (ext === 'html' || ext === 'htm') {
+                    content = html_beautify(content, { indent_size: 2 });
+                } else if (ext === 'css') {
+                    content = css_beautify(content, { indent_size: 2 });
+                } else if (ext === 'js' || ext === 'json') {
+                    content = js_beautify(content, { indent_size: 2 });
+                } else {
+                    showStatus('Formatting not supported', 'info');
+                    return;
+                }
+                editor.setValue(content);
+                showStatus('Code formatted!', 'success');
+            } catch (e) {
+                showStatus('Format failed: ' + e.message, 'error');
+            }
+        };
+
+                window.openPreview = function() {
+            let html = files.html || (editor ? editor.getValue() : '');
+            let css = files.css || '';
+            let js = files.js || '';
+            
+            // Check if we have HTML content
+            if (!html || html.trim() === '') {
+                showStatus('No HTML content to preview', 'error');
+                return;
+            }
+            
+            try {
+                const combined = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <style>${css || ''}</style>
+                    </head>
+                    <body>
+                        ${html}
+                        <script>
+                            try {
+                                ${js || ''}
+                            } catch(e) {
+                                console.error('JS Error:', e);
+                            }
+                        <\/script>
+                    </body>
+                    </html>
+                `;
+                
+                const blob = new Blob([combined], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                
+                const iframe = document.getElementById('preview-frame');
+                iframe.src = url;
+                
+                // Hide status toast when opening preview
+                document.getElementById('status').style.display = 'none';
+                document.getElementById('preview-modal').style.display = 'flex';
+                showStatus('Preview loaded with all linked files!', 'success');
+                
+            } catch (err) {
+                console.error('Preview error:', err);
+                showStatus('Preview error: ' + err.message, 'error');
+            }
+        };
+
+
+        window.closePreview = function() {
+            document.getElementById('preview-modal').style.display = 'none';
+            document.getElementById('preview-frame').src = 'about:blank';
+        };
+
+        window.saveFile = async function() {
+            if (!editor) return;
+            
+            if (document.getElementById('file-tabs').style.display === 'flex') {
+                // Save all files
+                await saveAllFiles();
+            } else {
+                // Save current file
+                await saveCurrentFile();
+            }
+        };
+
+        async function saveCurrentFile() {
+            const content = editor.getValue();
+            const message = document.getElementById('commit-msg').value || `Update ${filePath}`;
+            
+            if (!confirm(`Save changes to ${filePath}?`)) return;
+
+            showStatus('Saving...', 'info');
+            
+            try {
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repoName}/contents/${filePath}`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Authorization': `token ${token}`, 
+                        'Accept': 'application/vnd.github.v3+json', 
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        message, 
+                        content: btoa(unescape(encodeURIComponent(content))), 
+                        sha: fileSha, 
+                        branch 
+                    })
+                });
+                
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.message || `Save failed: ${res.status}`);
+                }
+                
+                const result = await res.json();
+                fileSha = result.content.sha;
+                localStorage.removeItem(`stackfam_draft_${owner}_${repoName}_${filePath}`);
+                
+                showStatus('File saved!', 'success');
+                setTimeout(() => {
+                    if (confirm('Saved! Return to explorer?')) {
+                        window.location.href = `explorer.html?repo=${encodeURIComponent(repoName)}&branch=${encodeURIComponent(branch)}`;
+                    }
+                }, 800);
+                
+            } catch (err) {
+                showStatus(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function saveAllFiles() {
+            // Save current editor content
+            files[currentFile] = editor.getValue();
+            
+            const message = document.getElementById('commit-msg').value || `Update project files`;
+            
+            if (!confirm(`Save HTML, CSS, and JS files?`)) return;
+
+            showStatus('Saving files...', 'info');
+            
+            try {
+                // Save HTML
+                if (files.html) {
+                    await fetch(`https://api.github.com/repos/${owner}/${repoName}/contents/${filePath}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            message: `${message} - HTML`, 
+                            content: btoa(unescape(encodeURIComponent(files.html))), 
+                            sha: fileShas.html, 
+                            branch 
+                        })
+                    });
+                }
+
+                // Save CSS if exists
+                const cssFile = filePath.replace(/\.html?$/, '.css');
+                if (files.css && files.css.trim()) {
+                    await fetch(`https://api.github.com/repos/${owner}/${repoName}/contents/${cssFile}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            message: `${message} - CSS`, 
+                            content: btoa(unescape(encodeURIComponent(files.css))), 
+                            sha: fileShas.css || '', 
+                            branch 
+                        })
+                    });
+                }
+
+                // Save JS if exists
+                const jsFile = filePath.replace(/\.html?$/, '.js');
+                if (files.js && files.js.trim()) {
+                    await fetch(`https://api.github.com/repos/${owner}/${repoName}/contents/${jsFile}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            message: `${message} - JS`, 
+                            content: btoa(unescape(encodeURIComponent(files.js))), 
+                            sha: fileShas.js || '', 
+                            branch 
+                        })
+                    });
+                }
+                
+                // Clear drafts
+                ['html', 'css', 'js'].forEach(type => {
+                    localStorage.removeItem(`stackfam_draft_${owner}_${repoName}_${type}`);
+                });
+                
+                showStatus('All files saved!', 'success');
+                setTimeout(() => {
+                    if (confirm('All files saved! Return to explorer?')) {
+                        window.location.href = `explorer.html?repo=${encodeURIComponent(repoName)}&branch=${encodeURIComponent(branch)}`;
+                    }
+                }, 800);
+                
+            } catch (err) {
+                showStatus(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        window.copyContent = function() {
+            if (!editor) return;
+            navigator.clipboard.writeText(editor.getValue()).then(() => {
+                showStatus('Copied!', 'success');
+            }).catch(() => showStatus('Failed to copy', 'error'));
+        };
+
+        window.downloadContent = function() {
+            if (!editor) return;
+            const blob = new Blob([editor.getValue()], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filePath.split('/').pop();
+            a.click();
+            URL.revokeObjectURL(a.href);
+            showStatus('Downloaded!', 'success');
+        };
+
+        window.deleteFile = async function() {
+            if (!confirm(`Delete "${filePath}"? This cannot be undone.`)) return;
+            showStatus('Deleting...', 'info');
+            try {
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repoName}/contents/${filePath}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: `Delete ${filePath}`, sha: fileSha, branch })
+                });
+                if (!res.ok) throw new Error((await res.json()).message || 'Delete failed');
+                localStorage.removeItem(`stackfam_draft_${owner}_${repoName}_${filePath}`);
+                showStatus('Deleted!', 'success');
+                setTimeout(() => window.location.href = `explorer.html?repo=${encodeURIComponent(repoName)}&branch=${encodeURIComponent(branch)}`, 1000);
+            } catch (err) {
+                showStatus(`Error: ${err.message}`, 'error');
+            }
+        };
+
+                function showStatus(msg, type = 'info') {
+            const el = document.getElementById('status');
+            el.className = 'status-toast ' + type;
+            el.innerHTML = `
+                <span class="toast-message">${msg}</span>
+                <button class="toast-close" onclick="dismissStatus(event)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            `;
+            el.style.display = 'flex';
+            
+            // Auto-dismiss for non-error messages
+            if (type !== 'error') {
+                if (el.autoDismissTimer) clearTimeout(el.autoDismissTimer);
+                el.autoDismissTimer = setTimeout(() => dismissStatus(), 4000);
+            }
+            
+            // Add swipe detection
+            setupToastSwipe(el);
+        }
+
+        function dismissStatus(event) {
+            if (event) event.stopPropagation();
+            const el = document.getElementById('status');
+            el.classList.add('dismissing');
+            setTimeout(() => {
+                el.style.display = 'none';
+                el.classList.remove('dismissing');
+            }, 300);
+        }
+
+        function setupToastSwipe(element) {
+            let startX = 0;
+            let currentX = 0;
+            let isSwiping = false;
+            
+            element.addEventListener('touchstart', handleTouchStart, { passive: true });
+            element.addEventListener('touchmove', handleTouchMove, { passive: true });
+            element.addEventListener('touchend', handleTouchEnd, { passive: true });
+            
+            function handleTouchStart(e) {
+                startX = e.touches[0].clientX;
+                isSwiping = true;
+            }
+            
+            function handleTouchMove(e) {
+                if (!isSwiping) return;
+                currentX = e.touches[0].clientX;
+                const diff = currentX - startX;
+                if (Math.abs(diff) > 10) {
+                    element.style.transform = `translateX(-50%) translateX(${diff}px)`;
+                    element.style.opacity = 1 - (Math.abs(diff) / 300);
+                }
+            }
+            
+            function handleTouchEnd() {
+                if (!isSwiping) return;
+                const diff = currentX - startX;
+                if (Math.abs(diff) > 100) {
+                    dismissStatus();
+                } else {
+                    element.style.transform = 'translateX(-50%)';
+                    element.style.opacity = '1';
+                }
+                isSwiping = false;
+                currentX = 0;
+            }
+        }
+
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
