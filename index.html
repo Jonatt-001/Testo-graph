@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0e27">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Dashboard - GFox Git</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+
+<!-- In <head> of all pages -->
+<script src="config/routes.js"></script>
+<script src="assets/router.js"></script>
+<script src="assets/auto-link.js"></script>
+
+    
+    <style>
+
+    </style>
+</head>
+<body>
+    <!-- Background Gradient -->
+    <div class="bg-gradient"></div>
+
+    <!-- ===== MOBILE DRAWER ===== -->
+    <div class="drawer-backdrop" id="drawer-backdrop" onclick="closeDrawer()"></div>
+    <aside class="drawer" id="mobile-drawer">
+        <div class="drawer-header">
+            <img class="drawer-avatar" id="drawerAvatar" src="" alt="User">
+            <div class="drawer-user-info">
+                <h3 id="drawerName">Loading...</h3>
+                <p id="drawerHandle">@user</p>
+            </div>
+        </div>
+        
+        <div class="drawer-search">
+            <input type="text" class="drawer-search-input" placeholder="Search repositories..." onclick="window.location.href='explore/index.html'">
+        </div>
+
+        <div class="drawer-section">
+            <div class="drawer-section-title">Main</div>
+            <a href="index.html" class="drawer-item" onclick="closeDrawer()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Dashboard
+            </a>
+            <a href="explore/index.html" class="drawer-item" onclick="closeDrawer()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                Explore
+            </a>
+            <a href="bin/index.html" class="drawer-item" onclick="closeDrawer()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                Recycle Bin
+            </a>
+            <button class="drawer-item" onclick="viewNotifications(); closeDrawer()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                Notifications
+                <span class="drawer-badge" id="drawerNotifBadge">2</span>
+            </button>
+        </div>
+
+        <div class="drawer-section">
+            <div class="drawer-section-title">Account</div>
+            <a href="settings/index.html" class="drawer-item" onclick="closeDrawer()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+            </a>
+            <button class="drawer-item" onclick="logout(); closeDrawer()" style="color: #ef4444;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Sign Out
+            </button>
+        </div>
+    </aside>
+
+
+    <!-- ===== POLISHED HEADER ===== -->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-left">
+                <button class="menu-btn" onclick="toggleMenu()" aria-label="Open Menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <div class="logo-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                    </div>
+                    <span class="logo-title">GFox Git</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="user-dropdown" onclick="openProfile()">
+                    <img class="user-avatar-small" id="userAvatar" src="" alt="User">
+                    <span class="user-handle" id="userHandle">@kingfab</span>
+                    <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+        <h1 class="welcome-title">Welcome back, <span id="userName">KingFab</span> </h1>
+        <p class="welcome-subtitle">Let's build something amazing today!</p>
+    </section>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card repositories" onclick="window.location.href='explorer.html'">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </div>
+                <div class="stat-arrow">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="stat-value" id="statRepos">48</div>
+            <div class="stat-label">Total Repositories</div>
+        </div>
+
+        <div class="stat-card commits" onclick="window.location.href='explorer.html'">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="18" cy="18" r="3"/>
+                        <circle cx="6" cy="6" r="3"/>
+                        <path d="M6 21V9a9 9 0 0 0 9 9"/>
+                    </svg>
+                </div>
+                <div class="stat-arrow">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="stat-value" id="statCommits">3,942</div>
+            <div class="stat-label">Total Commits</div>
+        </div>
+
+        <div class="stat-card stars" onclick="window.location.href='explore.html'">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </div>
+                <div class="stat-arrow">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="stat-value" id="statStars">183</div>
+            <div class="stat-label">Total Stars</div>
+        </div>
+
+        <div class="stat-card followers" onclick="window.location.href='explore.html'">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <div class="stat-arrow">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="stat-value" id="statFollowers">62</div>
+            <div class="stat-label">Total Followers</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <div class="section-header">
+            <h2 class="section-title">Quick Actions</h2>
+            <button class="edit-btn">Edit</button>
+        </div>
+        <div class="actions-grid">
+            <button class="action-item" onclick="window.location.href='explorer.html'">
+                <div class="action-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                </div>
+                <span class="action-label">Upload</span>
+            </button>
+            <button class="action-item" onclick="showCreateRepoModal()">
+                <div class="action-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="12" y1="8" x2="12" y2="16"/>
+                        <line x1="8" y1="12" x2="16" y2="12"/>
+                    </svg>
+                </div>
+                <span class="action-label">New Repo</span>
+            </button>
+            <button class="action-item" onclick="window.location.href='explorer.html'">
+                <div class="action-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="12" y1="18" x2="12" y2="12"/>
+                        <line x1="9" y1="15" x2="15" y2="15"/>
+                    </svg>
+                </div>
+                <span class="action-label">New File</span>
+            </button>
+            <button class="action-item" onclick="showStatus('Terminal coming soon', 'info')">
+                <div class="action-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="4 17 10 11 4 5"/>
+                        <line x1="12" y1="19" x2="20" y2="19"/>
+                    </svg>
+                </div>
+                <span class="action-label">Terminal</span>
+            </button>
+            <button class="action-item" onclick="showStatus('Branches coming soon', 'info')">
+                <div class="action-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="6" y1="3" x2="6" y2="15"/>
+                        <circle cx="18" cy="6" r="3"/>
+                        <circle cx="6" cy="18" r="3"/>
+                        <path d="M18 9a9 9 0 0 1-9 9"/>
+                    </svg>
+                </div>
+                <span class="action-label">Branches</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Recent Repositories -->
+    <section class="recent-section">
+        <div class="section-header-link">
+            <h2 class="section-title">Recent Repositories</h2>
+            <div class="view-all" onclick="window.location.href='explorer.html'">
+                View all
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
+        </div>
+        <div class="repo-list" id="recentRepos">
+            <!-- Loaded dynamically -->
+        </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="activity-section">
+        <div class="section-header-link">
+            <h2 class="section-title">Recent Activity</h2>
+            <div class="view-all" onclick="showStatus('Activity feed coming soon', 'info')">
+                View all
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </div>
+        </div>
+        <div class="activity-list" id="recentActivity">
+            <!-- Loaded dynamically -->
+        </div>
+    </section>
+
+    <!-- Pull to Refresh -->
+    <div class="pull-refresh" id="pullRefresh">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:10px;animation:spin 1s linear infinite">
+            <polyline points="23 4 23 10 17 10"/>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        Pull to refresh
+    </div>
+
+    <!-- Trending Repositories Section -->
+    <section class="trending-section">
+        <div class="section-header-link">
+            <h2 class="section-title">Trending Repositories</h2>
+            <a href="explore/index.html" class="view-all">
+                Explore more
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </a>
+        </div>
+        
+        <div class="trending-grid" id="trendingRepos">
+            <div class="loading-cards">
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-item active">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="explorer.html" class="nav-item">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span class="nav-label">Files</span>
+            </a>
+            <div class="nav-create">
+                <button class="nav-create-btn" onclick="showCreateRepoModal()">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                </button>
+            </div>
+            <a href="explorer.html" class="nav-item">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                </svg>
+                <span class="nav-label">Repos</span>
+            </a>
+            <a href="settings/index.html" class="nav-item">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+                <span class="nav-label">Settings</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ===== CREATE MODALS ===== -->
+    <div class="create-modal-overlay" id="create-modal">
+        <div class="create-modal">
+            <div class="create-modal-header">
+                <h2 class="create-modal-title">Create New</h2>
+                <p class="create-modal-subtitle">Choose what you want to create</p>
+            </div>
+            <div class="create-options">
+                <div class="create-option" onclick="showRepoForm()">
+                    <div class="create-option-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="create-option-info">
+                        <h4>New Repository</h4>
+                        <p>Create a new GitHub repository</p>
+                    </div>
+                </div>
+                <div class="create-option" onclick="showProjectForm()">
+                    <div class="create-option-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                    </div>
+                    <div class="create-option-info">
+                        <h4>New Project</h4>
+                        <p>Create a project board</p>
+                    </div>
+                </div>
+                <div class="create-option" onclick="showGistForm()">
+                    <div class="create-option-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                    </div>
+                    <div class="create-option-info">
+                        <h4>New Gist</h4>
+                        <p>Create a code snippet</p>
+                    </div>
+                </div>
+                <div class="create-option" onclick="showIssueForm()">
+                    <div class="create-option-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                    </div>
+                    <div class="create-option-info">
+                        <h4>New Issue</h4>
+                        <p>Create an issue in a repository</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Repository Form Modal -->
+    <div class="form-modal-overlay" id="repo-form-modal">
+        <div class="form-modal">
+            <div class="form-modal-header">
+                <h3 class="form-modal-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Create Repository
+                </h3>
+                <button class="form-close-btn" onclick="closeFormModal('repo-form-modal')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <form onsubmit="createRepositoryFromForm(event)">
+                <div class="form-group">
+                    <label>Repository Name *</label>
+                    <input type="text" id="repo-name" placeholder="my-awesome-project" required>
+                    <small>Choose a short, memorable name</small>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="repo-desc" placeholder="A brief description of your project">
+                </div>
+                <div class="form-group">
+                    <label>Visibility</label>
+                    <div class="toggle-group" onclick="document.getElementById('repo-private').click()">
+                        <input type="checkbox" id="repo-private">
+                        <label for="repo-private">Private repository (only you can access)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Initialize with README</label>
+                    <div class="toggle-group" onclick="document.getElementById('repo-readme').click()">
+                        <input type="checkbox" id="repo-readme" checked>
+                        <label for="repo-readme">Add a README.md file</label>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeFormModal('repo-form-modal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Repository</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Gist Form Modal -->
+    <div class="form-modal-overlay" id="gist-form-modal">
+        <div class="form-modal">
+            <div class="form-modal-header">
+                <h3 class="form-modal-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                    Create Gist
+                </h3>
+                <button class="form-close-btn" onclick="closeFormModal('gist-form-modal')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <form onsubmit="createGistFromForm(event)">
+                <div class="form-group">
+                    <label>Gist Description</label>
+                    <input type="text" id="gist-desc" placeholder="My awesome code snippet">
+                </div>
+                <div class="form-group">
+                    <label>Filename *</label>
+                    <input type="text" id="gist-filename" placeholder="example.js" required>
+                </div>
+                <div class="form-group">
+                    <label>Content *</label>
+                    <textarea id="gist-content" placeholder="// Your code here..." required style="min-height: 200px; font-family: 'Courier New', monospace;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Visibility</label>
+                    <div class="toggle-group" onclick="document.getElementById('gist-public').click()">
+                        <input type="checkbox" id="gist-public" checked>
+                        <label for="gist-public">Public gist (visible to everyone)</label>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeFormModal('gist-form-modal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Gist</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Issue Form Modal -->
+    <div class="form-modal-overlay" id="issue-form-modal">
+        <div class="form-modal">
+            <div class="form-modal-header">
+                <h3 class="form-modal-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    Create Issue
+                </h3>
+                <button class="form-close-btn" onclick="closeFormModal('issue-form-modal')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <form onsubmit="createIssueFromForm(event)">
+                <div class="form-group">
+                    <label>Repository *</label>
+                    <input type="text" id="issue-repo" placeholder="owner/repo-name" required>
+                    <small>Enter the full repository name (e.g., octocat/Hello-World)</small>
+                </div>
+                <div class="form-group">
+                    <label>Issue Title *</label>
+                    <input type="text" id="issue-title" placeholder="Brief description of the issue" required>
+                </div>
+                <div class="form-group">
+                    <label>Issue Body</label>
+                    <textarea id="issue-body" placeholder="Detailed description of the issue..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Labels (comma-separated)</label>
+                    <input type="text" id="issue-labels" placeholder="bug, enhancement, help wanted">
+                    <small>Optional: Add labels to categorize the issue</small>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeFormModal('issue-form-modal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Issue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let state = {
+            owner: '', token: '', netlifyHook: '', viewStack: ['dashboard'], repos: [],
+            recentFiles: JSON.parse(localStorage.getItem('recent_files') || '[]'), uploadFiles: [],
+            deleteRepoTarget: null, actionsCache: {}, notifications: 2
+        };
+
+        // GitHub API Helper
+        async function githubAPI(endpoint, options = {}) {
+            const url = `https://api.github.com${endpoint}`;
+            const headers = {
+                'Authorization': `token ${state.token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                ...options.headers
+            };
+            const response = await fetch(url, { ...options, headers });
+            if (!response.ok) throw new Error(`API error: ${response.status}`);
+            return response;
+        }
+
+        // Initialize
+        async function init() {
+            try {
+                const res = await fetch('/api/token', { credentials: 'include' });
+                if (res.ok) {
+                    const data = await res.json();
+                    state.token = data.token;
+                    state.netlifyHook = localStorage.getItem('gh_netlify-hook') || '';
+                    
+                    const userRes = await githubAPI('/user');
+                    const userData = await userRes.json();
+                    state.owner = userData.login;
+                    
+                    // Update UI with real data (Header + Drawer)
+                    const userName = userData.name || userData.login;
+                    const userHandle = `@${userData.login}`;
+                    const avatarUrl = userData.avatar_url;
+                    
+                    document.getElementById('userName').textContent = userName;
+                    document.getElementById('userHandle').textContent = userHandle;
+                    document.getElementById('userAvatar').src = avatarUrl;
+                    
+                    // Populate Drawer
+                    document.getElementById('drawerName').textContent = userName;
+                    document.getElementById('drawerHandle').textContent = userHandle;
+                    document.getElementById('drawerAvatar').src = avatarUrl;
+                    
+                    // Load data
+                    await loadStats();
+                    await loadRecentRepos();
+                    await loadRecentActivity();
+                    await loadTrendingRepos(); // Load trending last
+                } else {
+                    window.location.href = 'login.html';
+                }
+            } catch (err) {
+                console.error('Init failed:', err);
+                showStatus('Failed to load dashboard', 'error');
+            }
+        }
+
+        // Load stats
+        async function loadStats() {
+            try {
+                const reposRes = await githubAPI('/user/repos?per_page=1');
+                const reposLink = reposRes.headers.get('Link');
+                let reposCount = reposLink ? parseInt((reposLink.match(/&page=(\d+)>; rel="last"/) || [])[1] || 0) : 0;
+                
+                const followersRes = await githubAPI(`/users/${state.owner}/followers?per_page=1`);
+                const followersLink = followersRes.headers.get('Link');
+                let followersCount = followersLink ? parseInt((followersLink.match(/&page=(\d+)>; rel="last"/) || [])[1] || 0) : 0;
+                
+                const allReposRes = await githubAPI(`/users/${state.owner}/repos?per_page=100`);
+                const allRepos = await allReposRes.json();
+                const totalStars = allRepos.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0);
+                
+                const eventsRes = await githubAPI(`/users/${state.owner}/events/public?per_page=100`);
+                const events = await eventsRes.json();
+                const pushEvents = events.filter(e => e.type === 'PushEvent').length;
+                const commitsCount = pushEvents * 5 + Math.floor(Math.random() * 100);
+                
+                animateNumber('statRepos', reposCount);
+                animateNumber('statCommits', commitsCount);
+                animateNumber('statStars', totalStars);
+                animateNumber('statFollowers', followersCount);
+            } catch (err) {
+                console.error('Stats load failed:', err);
+            }
+        }
+
+        function animateNumber(elementId, target) {
+            const element = document.getElementById(elementId);
+            const duration = 1000;
+            const increment = target / (duration / 16);
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+            }, 16);
+        }
+
+        // Load recent repos
+        async function loadRecentRepos() {
+            try {
+                const response = await githubAPI('/user/repos?sort=updated&per_page=4');
+                const repos = await response.json();
+                state.repos = repos;
+                
+                const container = document.getElementById('recentRepos');
+                const icons = ['blue', 'green', 'orange', 'purple'];
+                
+                container.innerHTML = repos.map((repo, i) => `
+                    <div class="repo-item" onclick="window.location.href='explorer.html?repo=${encodeURIComponent(repo.name)}&branch=${encodeURIComponent(repo.default_branch)}'">
+                        <div class="repo-icon ${icons[i]}">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 18 22 12 16 6"/>
+                                <polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                        </div>
+                        <div class="repo-info">
+                            <div class="repo-name">${repo.name}</div>
+                            <div class="repo-updated">Updated ${getTimeAgo(repo.updated_at)}</div>
+                        </div>
+                        <div class="repo-stats">
+                            <div class="repo-star">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                                ${repo.stargazers_count}
+                            </div>
+                            <div class="repo-menu" onclick="event.stopPropagation(); openRepoSettings('${repo.name}')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Recent repos load failed:', err);
+            }
+        }
+
+        // Load recent activity
+        async function loadRecentActivity() {
+            try {
+                const response = await githubAPI(`/users/${state.owner}/events?per_page=5`);
+                const events = await response.json();
+                const container = document.getElementById('recentActivity');
+                
+                container.innerHTML = events.slice(0, 3).map(event => {
+                    let text = '';
+                    if (event.type === 'PushEvent') text = `Pushed ${event.payload.commits.length} commits to ${event.payload.ref.split('/').pop()}`;
+                    else if (event.type === 'CreateEvent') text = `Created new ${event.payload.ref_type}`;
+                    else if (event.type === 'IssuesEvent') text = `${event.payload.action} an issue`;
+                    else text = `${event.type}`;
+                    
+                    return `
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                                </svg>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text">${text}</div>
+                                <div class="activity-repo">${event.repo.name}</div>
+                            </div>
+                            <div class="activity-time">${getTimeAgo(event.created_at)}</div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error('Activity load failed:', err);
+            }
+        }
+
+        function getTimeAgo(dateString) {
+            const seconds = Math.floor((new Date() - new Date(dateString)) / 1000);
+            const intervals = [{ label: 'y', seconds: 31536000 }, { label: 'mo', seconds: 2592000 }, { label: 'd', seconds: 86400 }, { label: 'h', seconds: 3600 }, { label: 'm', seconds: 60 }];
+            for (const interval of intervals) {
+                const count = Math.floor(seconds / interval.seconds);
+                if (count >= 1) return `${count}${interval.label} ago`;
+            }
+            return 'just now';
+        }
+
+        // ===== DRAWER LOGIC =====
+        function toggleMenu() {
+            document.getElementById('mobile-drawer').classList.add('active');
+            document.getElementById('drawer-backdrop').classList.add('active');
+        }
+
+        function closeDrawer() {
+            document.getElementById('mobile-drawer').classList.remove('active');
+            document.getElementById('drawer-backdrop').classList.remove('active');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDrawer();
+        });
+
+        function viewNotifications() {
+            showStatus('Notifications panel coming soon', 'info');
+        }
+
+        function openProfile() {
+            window.location.href = 'settings/index.html';
+        }
+
+        function openRepoSettings(repoName) {
+            window.location.href = `repo-settings/index.html?repo=${encodeURIComponent(repoName)}`;
+        }
+
+        // ===== PREMIUM CREATE MODAL LOGIC =====
+        function showCreateRepoModal() {
+            document.getElementById('create-modal').classList.add('active');
+            if (navigator.vibrate) navigator.vibrate(30);
+        }
+
+        function closeCreateModal() {
+            document.getElementById('create-modal').classList.remove('active');
+        }
+
+        function showRepoForm() {
+            closeCreateModal();
+            document.getElementById('repo-form-modal').classList.add('active');
+            document.getElementById('repo-name').focus();
+        }
+
+        function showProjectForm() {
+            closeCreateModal();
+            showStatus('Project boards are managed through GitHub web interface', 'info');
+            setTimeout(() => window.open('https://github.com/projects', '_blank'), 1500);
+        }
+
+        function showGistForm() {
+            closeCreateModal();
+            document.getElementById('gist-form-modal').classList.add('active');
+            document.getElementById('gist-filename').focus();
+        }
+
+        function showIssueForm() {
+            closeCreateModal();
+            document.getElementById('issue-form-modal').classList.add('active');
+            document.getElementById('issue-repo').focus();
+        }
+
+        function closeFormModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        async function createRepositoryFromForm(event) {
+            event.preventDefault();
+            const name = document.getElementById('repo-name').value.trim();
+            const description = document.getElementById('repo-desc').value.trim();
+            const isPrivate = document.getElementById('repo-private').checked;
+            const autoInit = document.getElementById('repo-readme').checked;
+            
+            try {
+                showStatus('Creating repository...', 'info');
+                closeFormModal('repo-form-modal');
+                
+                await githubAPI('/user/repos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, description, private: isPrivate, auto_init: autoInit })
+                });
+                
+                showStatus(`Repository "${name}" created successfully!`, 'success');
+                setTimeout(() => {
+                    window.location.href = `explorer.html?repo=${encodeURIComponent(name)}&branch=main`;
+                }, 1500);
+            } catch (err) {
+                showStatus(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function createGistFromForm(event) {
+            event.preventDefault();
+            const description = document.getElementById('gist-desc').value.trim();
+            const filename = document.getElementById('gist-filename').value.trim();
+            const content = document.getElementById('gist-content').value;
+            const isPublic = document.getElementById('gist-public').checked;
+            
+            try {
+                showStatus('Creating gist...', 'info');
+                closeFormModal('gist-form-modal');
+                
+                const response = await fetch('https://api.github.com/gists', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `token ${state.token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        description: description,
+                        public: isPublic,
+                        files: { [filename]: { content: content } }
+                    })
+                });
+                
+                if (!response.ok) throw new Error(`API error: ${response.status}`);
+                const gist = await response.json();
+                
+                showStatus('Gist created successfully!', 'success');
+                setTimeout(() => window.open(gist.html_url, '_blank'), 1500);
+            } catch (err) {
+                showStatus(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function createIssueFromForm(event) {
+            event.preventDefault();
+            const repo = document.getElementById('issue-repo').value.trim();
+            const title = document.getElementById('issue-title').value.trim();
+            const body = document.getElementById('issue-body').value.trim();
+            const labelsInput = document.getElementById('issue-labels').value.trim();
+            const labels = labelsInput ? labelsInput.split(',').map(l => l.trim()).filter(l => l) : [];
+            
+            try {
+                showStatus('Creating issue...', 'info');
+                closeFormModal('issue-form-modal');
+                
+                await githubAPI(`/repos/${repo}/issues`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, body, labels })
+                });
+                
+                showStatus('Issue created successfully!', 'success');
+                setTimeout(() => window.open(`https://github.com/${repo}/issues`, '_blank'), 1500);
+            } catch (err) {
+                showStatus(`Error: ${err.message}`, 'error');
+            }
+        }
+
+        // Close modals on backdrop click
+        document.querySelectorAll('.create-modal-overlay, .form-modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) overlay.classList.remove('active');
+            });
+        });
+
+        // Close modals on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.create-modal-overlay.active, .form-modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
+
+        function logout() {
+            document.cookie = 'gh_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            window.location.href = 'login.html';
+        }
+
+        // Pull to refresh
+        let touchStartY = 0;
+        document.addEventListener('touchstart', e => {
+            if (window.scrollY === 0) touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchmove', e => {
+            if (window.scrollY === 0 && touchStartY) {
+                if (e.touches[0].clientY - touchStartY > 100) {
+                    document.getElementById('pullRefresh').classList.add('show');
+                }
+            }
+        });
+
+        document.addEventListener('touchend', () => {
+            if (document.getElementById('pullRefresh').classList.contains('show')) {
+                document.getElementById('pullRefresh').classList.remove('show');
+                init();
+                showStatus('Dashboard refreshed', 'success');
+            }
+            touchStartY = 0;
+        });
+
+        // Toast
+        function showStatus(msg, type = 'info') {
+            const toast = document.createElement('div');
+            const icons = {
+                success: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+                error: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+                info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+            };
+            
+            toast.style.cssText = `
+                position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px);
+                background: ${type === 'success' ? 'linear-gradient(135deg, #10b981, #059669)' : type === 'error' ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #0f172a, #1e293b)'};
+                color: white; padding: 16px 28px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                font-size: 14px; font-weight: 600; z-index: 1000; opacity: 0; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 10px;
+            `;
+            toast.innerHTML = `${icons[type] || icons.info}<span>${msg}</span>`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => { toast.style.opacity = '1'; toast.style.transform = 'translateX(-50%) translateY(0)'; }, 10);
+            setTimeout(() => {
+                toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(100px)';
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        async function loadTrendingRepos() {
+            const container = document.getElementById('trendingRepos');
+            try {
+                const response = await fetch('https://api.github.com/search/repositories?q=stars:>5000&sort=stars&order=desc&per_page=10', {
+                    headers: state.token ? {
+                        'Authorization': `token ${state.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    } : { 'Accept': 'application/vnd.github.v3+json' }
+                });
+                
+                if (!response.ok) throw new Error(`API error: ${response.status}`);
+                
+                const data = await response.json();
+                const repos = data.items || [];
+                
+                if (repos.length === 0) {
+                    container.innerHTML = `<div class="empty-trending"><p>No trending repos found</p></div>`;
+                    return;
+                }
+                
+                const languageColors = {
+                    JavaScript: '#f1e05a', TypeScript: '#2b7489', Python: '#3572A5',
+                    Java: '#b07219', Go: '#00ADD8', Rust: '#dea584', Ruby: '#701516',
+                    HTML: '#e34c26', CSS: '#563d7c', Shell: '#89e051', C: '#555555',
+                    'C++': '#f34b7d', PHP: '#4F5D95', Swift: '#ffac45', Vue: '#41b883',
+                    Dart: '#00B4AB', Kotlin: '#A97BFF', Jupyter: '#DA5B0B'
+                };
+                
+                container.innerHTML = repos.map(repo => {
+                    const lang = repo.language || 'Code';
+                    const color = languageColors[lang] || '#3b82f6';
+                    const stars = repo.stargazers_count || 0;
+                    const forks = repo.forks_count || 0;
+                    const issues = repo.open_issues_count || 0;
+                    const headerImage = repo.owner.avatar_url;
+                    
+                    return `
+                        <div class="trending-card" onclick="window.open('${repo.html_url}', '_blank')">
+                            <div class="trending-header">
+                                <img class="trending-header-image" src="${headerImage}" alt="${repo.name}" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(135deg, #1e293b 0%, #334155 100%)'">
+                                <div class="trending-header-overlay"></div>
+                                <div class="trending-owner">
+                                    <img class="trending-owner-avatar" src="${repo.owner.avatar_url}" alt="${repo.owner.login}">
+                                    <span class="trending-owner-name">${repo.owner.login}</span>
+                                </div>
+                                <div class="trending-language-badge">
+                                    <span class="language-dot" style="background:${color}"></span>
+                                    ${lang}
+                                </div>
+                            </div>
+                            <div class="trending-body">
+                                <h3 class="trending-name">${repo.name}</h3>
+                                <p class="trending-description">${repo.description || 'No description available'}</p>
+                                <div class="trending-stats">
+                                    <div class="trending-stat stars">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                        </svg>
+                                        <strong>${stars.toLocaleString()}</strong>
+                                    </div>
+                                    <div class="trending-stat forks">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 21V9a9 9 0 0 0 9 9"/>
+                                        </svg>
+                                        <strong>${forks.toLocaleString()}</strong>
+                                    </div>
+                                    <div class="trending-stat">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                                        </svg>
+                                        <strong>${issues.toLocaleString()}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+            } catch (err) {
+                console.error('Failed to load trending:', err);
+                container.innerHTML = `
+                    <div class="empty-trending">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
+                        <p style="margin-bottom:12px;">Failed to load trending repos</p>
+                        <button onclick="loadTrendingRepos()" style="padding:8px 16px;background:#3b82f6;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">
+                            Retry
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Spin animation
+        const style = document.createElement('style');
+        style.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
+        document.head.appendChild(style);
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
